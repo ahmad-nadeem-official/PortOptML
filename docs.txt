@@ -1,1 +1,3 @@
 https://ranaroussi.github.io/yfinance/
+
+https://colab.research.google.com/drive/1yHkTOkGarwGxxRXEK0ABCXpC4sAMPy3A#scrollTo=8vY-Mxr6xNgI

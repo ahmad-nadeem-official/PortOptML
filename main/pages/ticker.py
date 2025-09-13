@@ -1,6 +1,8 @@
 import streamlit as st
 import yfinance as yf
 
+
+st.set_page_config(layout="wide")
 # Get top 10 most active tickers from Yahoo
 results = yf.screen('most_actives')
 top10 = results['quotes'][:50]

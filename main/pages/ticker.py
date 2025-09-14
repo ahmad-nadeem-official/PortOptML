@@ -8,15 +8,15 @@ results = yf.screen('most_actives')
 top10 = results['quotes'][:50]
 
 currency = {
-    "USD": "$",    # US Dollar
-    "GBP": "£",    # British Pound
-    "EUR": "€",    # Euro
-    "INR": "₹",    # Indian Rupee
-    "CNY": "¥",    # Chinese Yuan
-    "JPY": "¥",    # Japanese Yen
-    "CHF": "CHF",  # Swiss Franc (kept as text, no universal symbol)
-    "AED": "د.إ",  # UAE Dirham
-    "SAR": "﷼",    # Saudi Riyal
+    "USD": "$",    
+    "GBP": "£",    
+    "EUR": "€",    
+    "INR": "₹",    
+    "CNY": "¥",    
+    "JPY": "¥",    
+    "CHF": "CHF",  
+    "AED": "د.إ",  
+    "SAR": "﷼",    
 }
 
 

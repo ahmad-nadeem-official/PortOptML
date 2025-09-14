@@ -1,30 +1,15 @@
-import yfinance as yf
 import streamlit as st
+import requests
+from bs4 import BeautifulSoup
 
-st.title("Stock News")
+url = "https://finance.yahoo.com/quote/NVDA/news"
+headers = {"User-Agent": "Mozilla/5.0"}
+r = requests.get(url, headers=headers)
+soup = BeautifulSoup(r.text, "html.parser")
 
-# Use the ticker
-# Make a Ticker object for Microsoft
-
-
-col1, col2 = st.columns(2)
-
-with col1:
-
-   msft = yf.Ticker("MSFT")
-   
-   # Get the company's quarterly earnings (reported earnings vs expectations)
-   q_earnings = msft.quarterly_financials
-   
-   st.write(q_earnings)
+for item in soup.find_all('h3'):
+    print(item.text)
 
 
-with col2:
-   st.image("https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png")
-   # Create a Ticker object for Microsoft
-   msft = yf.Ticker("MSFT")
-   
-   # Get the company's quarterly financial statements (Income Statement)
-   q_financials = msft.quarterly_financials
-   
-   st.write(q_financials)
+
+st.markdown("<h1 style='color: #3a8ec2;' text-align='center'>This is currently under-develop page</h1>", unsafe_allow_html=True)

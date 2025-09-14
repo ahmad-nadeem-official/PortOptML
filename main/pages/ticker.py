@@ -1,7 +1,7 @@
 import streamlit as st
 import yfinance as yf
-from yahoo_fin import stock_info as si
-from ..scraped import get_sp500
+import pandas as pd
+import requests
 
 
 st.set_page_config(layout="wide")
@@ -68,13 +68,45 @@ st.title("Welcome to the world of Finance")
 st.markdown("<h3 style='color: #00F0A8;'>Choose your stock to get started</h3>", unsafe_allow_html=True)
 
 
-if 'tick' not in st.session_state:
-    st.session_state['tick'] = ""
+@st.cache_data
+def get_sp500():
+    url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    response = requests.get(url, headers=headers)
+    table = pd.read_html(response.text)[0]
+    return table["Symbol"].tolist()
 
 
 tickers = get_sp500()
 
-choice = st.selectbox("Choose a stock", tickers ,st.session_state['tick'])
+if 'tick' not in st.session_state:
+    st.session_state['tick'] = tickers[0] 
+
+choice = st.selectbox("Choose a stock", tickers, index=tickers.index(st.session_state['tick']))
 st.session_state['tick'] = choice
 
-st.write(f"You selected: {st.session_state['tick']}")
+# --- 3. Fetch historical data for selected ticker ---
+@st.cache_data
+def get_stock_data(ticker):
+    data = yf.Ticker(ticker).history(period="1y")  # last 1 year
+    return data
+
+data = get_stock_data(st.session_state['tick'])
+
+st.write(data)
+
+
+
+# --- 4. Display the graph ---
+st.subheader(f"{st.session_state['tick']} Price Chart (Last 1 Year)")
+# st.line_chart(data['Close'])
+# st.line_chart(data['Volume'])
+st.line_chart(data[['Open', 'High', 'Low', 'Close']])
+
+tick_s = st.session_state['tick']
+tick = yf.Ticker(tick_s)
+
+st.write(tick.quarterly_income_stmt)

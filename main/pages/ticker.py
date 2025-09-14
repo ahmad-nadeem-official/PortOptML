@@ -1,6 +1,7 @@
 import streamlit as st
 import yfinance as yf
 from yahoo_fin import stock_info as si
+from ..scraped import get_sp500
 
 
 st.set_page_config(layout="wide")
@@ -70,8 +71,10 @@ st.markdown("<h3 style='color: #00F0A8;'>Choose your stock to get started</h3>",
 if 'tick' not in st.session_state:
     st.session_state['tick'] = ""
 
-tickers = si.tickers_sp500()  # get S&P500 tickers
-choice = st.selectbox("Choose a stock", tickers, st.session_state['tick'])
+
+tickers = get_sp500()
+
+choice = st.selectbox("Choose a stock", tickers ,st.session_state['tick'])
 st.session_state['tick'] = choice
 
 st.write(f"You selected: {st.session_state['tick']}")

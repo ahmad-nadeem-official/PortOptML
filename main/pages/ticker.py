@@ -1,11 +1,12 @@
 import streamlit as st
 import yfinance as yf
+from yahoo_fin import stock_info as si
 
 
 st.set_page_config(layout="wide")
-# Get top 10 most active tickers from Yahoo
+
 results = yf.screen('most_actives')
-top10 = results['quotes'][:50]
+top10 = results['quotes'][1:150]
 
 currency = {
     "USD": "$",    
@@ -20,10 +21,6 @@ currency = {
 }
 
 
-logo = {
-    'NVDA' : "https://logo.clearbit.com/nvidia.com"
-}
-
 # Build the ticker line
 ticker_items = []
 for stock in top10:
@@ -32,11 +29,10 @@ for stock in top10:
     change = stock['regularMarketChangePercent']
     curren = stock['currency']
     color = "green" if change >= 0 else "red"
-    ticker_items.append(f"<span style='margin-right:40px'>{symbol}: {price:.2f}{currency[curren]} <span style='color:{color}'>({change:.2f}%)</span></span>")
+    ticker_items.append(f"<span style='margin-right:40px'>{symbol}: {price:.2f}{currency[curren]}<span style='color:{color}'>({change:.2f}%)</span>|</span>")
 
 ticker_line = " ".join(ticker_items)
 
-# Streamlit marquee-like effect
 st.markdown(
     f"""
     <style>
@@ -49,7 +45,7 @@ st.markdown(
     .ticker-text {{
       display: inline-block;
       padding-left: 100%;
-      animation: ticker 35s linear infinite;
+      animation: ticker 39s linear infinite;
       font-size: 20px;
       font-family: monospace;
     }}
@@ -65,3 +61,17 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
+st.title("Welcome to the world of Finance")
+st.markdown("<h3 style='color: #00F0A8;'>Choose your stock to get started</h3>", unsafe_allow_html=True)
+
+
+if 'tick' not in st.session_state:
+    st.session_state['tick'] = ""
+
+tickers = si.tickers_sp500()  # get S&P500 tickers
+choice = st.selectbox("Choose a stock", tickers, st.session_state['tick'])
+st.session_state['tick'] = choice
+
+st.write(f"You selected: {st.session_state['tick']}")

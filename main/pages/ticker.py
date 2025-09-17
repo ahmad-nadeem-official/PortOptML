@@ -174,3 +174,12 @@ st.line_chart(shares[['Volume']], use_container_width=True)
 
 st.subheader("Dividends & Stock Splits")
 st.line_chart(shares[['Dividends', 'Stock Splits']], use_container_width=True)
+
+st.markdown(f"<span style='color:#00F0A8;'>Major Shareholders of {company}</span>", unsafe_allow_html=True)
+
+# Create a Ticker object for Apple
+m_h = yf.Ticker(st.session_state['tick'])
+
+# Get major shareholders
+holders = m_h.get_major_holders()
+st.dataframe(holders)

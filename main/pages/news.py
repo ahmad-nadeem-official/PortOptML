@@ -16,3 +16,7 @@
 
 import yfinance as yf
 print(yf.__version__)
+
+get_incomestmt()
+get_earnings_dates(limit=12)
+

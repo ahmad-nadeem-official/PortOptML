@@ -96,6 +96,7 @@ def get_stock_data(ticker):
 
 data = get_stock_data(st.session_state['tick'])
 
+st.success(f"record of 1 year of {st.session_state['tick']} fetched successfully!")
 st.write(data)
 
 
@@ -110,3 +111,66 @@ tick_s = st.session_state['tick']
 tick = yf.Ticker(tick_s)
 
 st.write(tick.quarterly_income_stmt)
+
+# '''extra inof'''
+meta = tick.info
+
+company = meta['longName']
+st.markdown(f"<h3>The business summary of <span style='color:#00F0A8;'>{company}</span></h3>", unsafe_allow_html=True)
+st.write(meta['longBusinessSummary'])
+ 
+st.subheader("Key Information")
+col1, col2 = st.columns(2)
+
+# {meta['city']}, {meta['state']}, 
+
+with col1:
+    st.write(f"**Address:** {meta['address1']}, {meta['zip']}, {meta['country']}")
+    st.write(f"**Sector:** {meta['sector']}")
+    st.write(f"**Industry:** {meta['industry']}")
+    st.write(f"**Website:** {meta['website']}")
+    st.write(f"**Phone:** {meta['phone']}")
+    st.write(f"**Current Price:** {meta['currentPrice']:.2f}{{meta['currency']}}")
+    st.write(f"**Market Cap:** {meta['marketCap']:,} {meta['currency']}")
+    st.write(f"**52 Week High:** {meta['fiftyTwoWeekHigh']:.2f} {meta['currency']}")
+    st.write(f"**52 Week Low:** {meta['fiftyTwoWeekLow']:.2f} {meta['currency']}")
+    st.write(f"**Average Volume:** {meta['averageVolume']:,}")
+
+with col2:
+    st.write(f"**Previous Close:** {meta['previousClose']:.2f} {meta['currency']}")
+    st.write(f"**Open:** {meta['open']:.2f} {meta['currency']}")
+    st.write(f"**Day's Range:** {meta['dayLow']:.2f} - {meta['dayHigh']:.2f} {meta['currency']}")
+    st.write(f"**Volume:** {meta['volume']:,}")
+    st.write(f"**Dividend Yield:** {meta.get('dividendYield', 'N/A')}")
+    st.write(f"**Ex-Dividend Date:** {meta.get('exDividendDate', 'N/A')}")
+    st.write(f"**1y Target Est:** {meta.get('targetMeanPrice', 'N/A')} {meta['currency']}")
+    st.write(f"**Beta:** {meta['beta']}")
+    st.write(f"**PE Ratio (TTM):** {meta.get('trailingPE', 'N/A')}")
+    st.write(f"**EPS (TTM):** {meta.get('trailingEps', 'N/A')}")
+
+
+st.markdown(f"<span style='color:#00F0A8;'>Shares History of {company}</span>", unsafe_allow_html=True)
+
+ticker_obj = yf.Ticker(st.session_state['tick'])
+
+dates = st.date_input(
+    "Select Date Range",
+    value=(pd.to_datetime("2023-01-01"), pd.to_datetime("today")),
+    min_value=pd.to_datetime("2000-01-01"),
+    max_value=pd.to_datetime("today")
+)
+
+start_date, end_date = dates
+shares = ticker_obj.history(start=start_date, end=end_date)
+
+cols = ['Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock Splits']
+
+st.subheader(f"{company} — History From ({start_date} to {end_date})")
+st.subheader("Price (OHLC)")
+st.line_chart(shares[['Open', 'High', 'Low', 'Close']], use_container_width=True)
+
+st.subheader("Volume")
+st.line_chart(shares[['Volume']], use_container_width=True)
+
+st.subheader("Dividends & Stock Splits")
+st.line_chart(shares[['Dividends', 'Stock Splits']], use_container_width=True)

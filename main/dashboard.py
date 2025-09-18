@@ -97,8 +97,8 @@ if 'tick' not in st.session_state:
 st.sidebar.title("Settings")
 
 stock_symbol = st.sidebar.selectbox("Enter Stock Symbol", tickers, index=tickers.index(st.session_state['tick']))
-interval = st.sidebar.selectbox("Update Interval (seconds)", [10, 30, 60], index=1)
-lookback = st.sidebar.selectbox("History Window", ["5m", "15m", "30m", "60m", "1d"], index=0)
+interval = "1m"
+period =  "1d"
 
 st.sidebar.info("Data updates automatically")
 
@@ -110,22 +110,24 @@ if "prices" not in st.session_state:
     st.session_state.prices = pd.DataFrame()
 
 # Function to fetch live price
-def get_live_data(symbol, period="1d", interval="1m"):
+def get_live_data(symbol):
     data = yf.download(tickers=symbol, period=period, interval=interval, progress=False)
-    data = data[["Close"]].rename(columns={"Close": "Price"})
-    return data
+    if data.empty:
+        return pd.DataFrame(columns=["Price"])
+    return data[["Close"]].rename(columns={"Close": "Price"})
+    
 
 # Main live loop
 #remember the white board example
 placeholder = st.empty()
+warning_h = st.empty()
 
 #bg of system
 bg_color = st.get_option("theme.backgroundColor")
 
 while True:
     try:
-        live_data = get_live_data(stock_symbol, period="1d", interval="1m")
-        live_data = live_data.tail(50)  # keep last 50 points for smooth graph
+        live_data = get_live_data(stock_symbol).tail(50) # fetch last 50 data points for smooth graph
 
         # Merge with stored data
         st.session_state.prices = live_data
@@ -151,28 +153,38 @@ while True:
                 else:
                     latest_price = None
                     prev_price   = None
-                    st.warning("No live data available at the moment please restart the app")
-                    continue
+                    with warning_h:
+                       st.warning("please restart the app")
+                    time.sleep(30)
 
                 #change formula
                 change = ((latest_price - prev_price) / prev_price) * 100
                 color = "green" if change >= 0 else "red"
                 
 
+                # fixed inline style strings
                 if darkdetect.isDark():
-                   st.markdown(f"""<div style="padding:20px; border-radius:10px; color:white text-align:center">
-                    <h2>{stock_symbol}</h2>
-                    <h1 style="color:{color};">${latest_price:.2f}</h1>
-                    <p style="color:{color};">{change:.2f}% (last update)</p>
-                   </div>
-                   """, unsafe_allow_html=True)
+                    st.markdown(
+                        f"""
+                        <div style="padding:20px; border-radius:10px; text-align:center"><h1 color:white;>{stock_symbol}</h1>
+                        <h1 style="color:{color};">${latest_price:.2f}</h1>
+                        <p style="color:{color};">{change:.2f}% (last update)</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
                 else:
-                   st.markdown(f"""<div style="padding:20px; border-radius:10px; background-color:#f0f2f6; text-align:center">
-                    <h2>{stock_symbol}</h2>
-                    <h1 style="color:{color};">${latest_price:.2f}</h1>
-                    <p style="color:{color};">{change:.2f}% (last update)</p>
-                   </div>
-                   """, unsafe_allow_html=True)   
+                    st.markdown(
+                        f"""
+                         <div style="padding:20px; border-radius:10px; text-align:center;">
+                         <h1 style="color:##a0a0a0;">{stock_symbol}<h1>
+                          <h1 style="color:{color};">${latest_price:.2f}</h1>
+                          <p style="color:{color};">{change:.2f}% (last update)</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
 
             # Chart
             with col2:
@@ -208,8 +220,8 @@ while True:
                st.pyplot(fig)
 
 
-        time.sleep(interval)  # wait before next refresh
+        time.sleep(30)  # wait before next refresh
 
     except Exception as e:
         st.error(f"Error fetching live data: {e}")
-        time.sleep(interval)
+        time.sleep(30)

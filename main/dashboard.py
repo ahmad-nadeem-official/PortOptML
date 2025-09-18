@@ -155,7 +155,7 @@ while True:
                     prev_price   = None
                     with warning_h:
                        st.warning("please restart the app")
-                    time.sleep(30)
+                    continue
 
                 #change formula
                 change = ((latest_price - prev_price) / prev_price) * 100

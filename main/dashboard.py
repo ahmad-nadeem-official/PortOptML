@@ -91,12 +91,12 @@ def get_sp500():
 tickers = get_sp500()
 
 if 'tick' not in st.session_state:
-    st.session_state['tick'] = tickers[0] 
+    st.session_state['tick'] = tickers[0]
 
 st.sidebar.title("Settings")
 
-stock_symbol = st.sidebar.selectbox("Enter Stock Symbol", [st.session_state['tick']]).upper()
-interval = st.sidebar.selectbox("Update Interval (seconds)", [5, 10, 30, 60], index=1)
+stock_symbol = st.sidebar.selectbox("Enter Stock Symbol", tickers, index=tickers.index(st.session_state['tick']))
+interval = st.sidebar.selectbox("Update Interval (seconds)", [10, 30, 60], index=1)
 lookback = st.sidebar.selectbox("History Window", ["5m", "15m", "30m", "60m", "1d"], index=0)
 
 st.sidebar.info("Data updates automatically")

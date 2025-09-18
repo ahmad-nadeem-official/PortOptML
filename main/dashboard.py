@@ -4,6 +4,7 @@ import pandas as pd
 import requests
 import matplotlib.pyplot as plt
 import time
+import darkdetect
 from datetime import datetime, timedelta
 
 st.set_page_config(
@@ -115,9 +116,10 @@ def get_live_data(symbol, period="1d", interval="1m"):
     return data
 
 # Main live loop
+#remember the white board example
 placeholder = st.empty()
 
-
+#bg of system
 bg_color = st.get_option("theme.backgroundColor")
 
 while True:
@@ -128,14 +130,20 @@ while True:
         # Merge with stored data
         st.session_state.prices = live_data
 
-        # Display
+        # changes whole compund at a time
         with placeholder.container():
             col1, col2 = st.columns([1, 2])
 
             # Latest price card
             with col1:
+
+                # .iloc[-1] still gives you a Pandas object (Series element).
+                # .item() converts it into a plain Python number (like float or int).
+
                 latest_price = live_data["Price"].iloc[-1].item()
                 prev_price = live_data["Price"].iloc[-2].item()
+
+                #change formula
                 change = ((latest_price - prev_price) / prev_price) * 100
                 color = "green" if change >= 0 else "red"
 
@@ -154,8 +162,20 @@ while True:
                 ax.set_title(f"{stock_symbol} Live Price", fontsize=16)
                 ax.set_xlabel("Time")
                 ax.set_ylabel("Price (USD)")
-                ax.grid(True, alpha=0.3)
-                st.pyplot(fig)
+                
+                if darkdetect.isDark():
+                   # Make ticks white
+                   ax.tick_params(colors="white")
+                   
+                   # Grid lines
+                   ax.grid(True, alpha=0.3, color="gray")
+                   
+                   # Transparent background
+                   fig.patch.set_alpha(0)
+                   ax.patch.set_alpha(0)
+                
+                st.pyplot(fig, transparent=True)
+
 
         time.sleep(interval)  # wait before next refresh
 

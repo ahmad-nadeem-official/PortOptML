@@ -139,42 +139,73 @@ while True:
 
                 # .iloc[-1] still gives you a Pandas object (Series element).
                 # .item() converts it into a plain Python number (like float or int).
+                
 
-                latest_price = live_data["Price"].iloc[-1].item()
-                prev_price = live_data["Price"].iloc[-2].item()
+                #this loop is to check whether we have enough data points
+                if len(live_data) >= 2:
+                    latest_price = live_data["Price"].iloc[-1].item()
+                    prev_price   = live_data["Price"].iloc[-2].item()
+                elif len(live_data) == 1:
+                    latest_price = live_data["Price"].iloc[-1].item()
+                    prev_price   = latest_price   
+                else:
+                    latest_price = None
+                    prev_price   = None
+                    st.warning("No live data available at the moment please restart the app")
+                    continue
 
                 #change formula
                 change = ((latest_price - prev_price) / prev_price) * 100
                 color = "green" if change >= 0 else "red"
+                
 
-                st.markdown(f"""
-                <div style="padding:20px; border-radius:10px; color:white; text-align:center">
+                if darkdetect.isDark():
+                   st.markdown(f"""<div style="padding:20px; border-radius:10px; color:white text-align:center">
                     <h2>{stock_symbol}</h2>
                     <h1 style="color:{color};">${latest_price:.2f}</h1>
                     <p style="color:{color};">{change:.2f}% (last update)</p>
-                </div>
-                """, unsafe_allow_html=True)
+                   </div>
+                   """, unsafe_allow_html=True)
+                else:
+                   st.markdown(f"""<div style="padding:20px; border-radius:10px; background-color:#f0f2f6; text-align:center">
+                    <h2>{stock_symbol}</h2>
+                    <h1 style="color:{color};">${latest_price:.2f}</h1>
+                    <p style="color:{color};">{change:.2f}% (last update)</p>
+                   </div>
+                   """, unsafe_allow_html=True)   
 
             # Chart
             with col2:
-                fig, ax = plt.subplots(figsize=(15,5))
-                ax.plot(live_data.index, live_data["Price"], color='#008000', linewidth=2)
-                ax.set_title(f"{stock_symbol} Live Price", fontsize=16)
-                ax.set_xlabel("Time")
-                ax.set_ylabel("Price (USD)")
-                
-                if darkdetect.isDark():
+               fig, ax = plt.subplots(figsize=(15,5))
+               ax.plot(live_data.index, live_data["Price"], color='#00FF00', linewidth=2)  # brighter green
+               
+               ax.set_title(f"{stock_symbol} Live Price", fontsize=16)
+               ax.set_xlabel("Time")
+               ax.set_ylabel("Price (USD)")
+               
+               # Detect system theme
+               if darkdetect.isDark():
+                   # Title + labels white
+                   ax.set_title(f"{stock_symbol} Live Price", fontsize=16, color="white")
+                   ax.set_xlabel("Time", color="white")
+                   ax.set_ylabel("Price (USD)", color="white")
+               
                    # Make ticks white
                    ax.tick_params(colors="white")
-                   
-                   # Grid lines
+               
+                   # Grid lines gray
                    ax.grid(True, alpha=0.3, color="gray")
-                   
+               
                    # Transparent background
                    fig.patch.set_alpha(0)
                    ax.patch.set_alpha(0)
-                
-                   st.pyplot(fig, transparent=True)
+               
+               else:
+                   # Light mode adjustments (optional)
+                   ax.grid(True, alpha=0.3, color="black")
+               
+               # ✅ No transparent=True here
+               st.pyplot(fig)
 
 
         time.sleep(interval)  # wait before next refresh

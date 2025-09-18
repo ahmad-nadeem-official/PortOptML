@@ -118,6 +118,9 @@ def get_live_data(symbol, period="1d", interval="1m"):
 # Main live loop
 placeholder = st.empty()
 
+
+bg_color = st.get_option("theme.backgroundColor")
+
 while True:
     try:
         live_data = get_live_data(stock_symbol, period="1d", interval="1m")
@@ -138,7 +141,7 @@ while True:
                 color = "green" if change >= 0 else "red"
 
                 st.markdown(f"""
-                <div style="padding:20px; border-radius:10px; background:#111; color:white; text-align:center">
+                <div style="padding:20px; border-radius:10px; color:white; text-align:center">
                     <h2>{stock_symbol}</h2>
                     <h1 style="color:{color};">${latest_price:.2f}</h1>
                     <p style="color:{color};">{change:.2f}% (last update)</p>
@@ -147,7 +150,7 @@ while True:
 
             # Chart
             with col2:
-                fig, ax = plt.subplots(figsize=(10,5))
+                fig, ax = plt.subplots(figsize=(15,5))
                 ax.plot(live_data.index, live_data["Price"], color='#008000', linewidth=2)
                 ax.set_title(f"{stock_symbol} Live Price", fontsize=16)
                 ax.set_xlabel("Time")

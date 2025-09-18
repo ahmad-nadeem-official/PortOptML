@@ -132,8 +132,8 @@ while True:
 
             # Latest price card
             with col1:
-                latest_price = live_data["Price"].iloc[-1]
-                prev_price = live_data["Price"].iloc[-2]
+                latest_price = live_data["Price"].iloc[-1].item()
+                prev_price = live_data["Price"].iloc[-2].item()
                 change = ((latest_price - prev_price) / prev_price) * 100
                 color = "green" if change >= 0 else "red"
 
@@ -148,7 +148,7 @@ while True:
             # Chart
             with col2:
                 fig, ax = plt.subplots(figsize=(10,5))
-                ax.plot(live_data.index, live_data["Price"], color="cyan", linewidth=2)
+                ax.plot(live_data.index, live_data["Price"], color='#008000', linewidth=2)
                 ax.set_title(f"{stock_symbol} Live Price", fontsize=16)
                 ax.set_xlabel("Time")
                 ax.set_ylabel("Price (USD)")

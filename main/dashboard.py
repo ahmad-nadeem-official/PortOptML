@@ -147,14 +147,15 @@ while True:
                 if len(live_data) >= 2:
                     latest_price = live_data["Price"].iloc[-1].item()
                     prev_price   = live_data["Price"].iloc[-2].item()
+                    warning_h.empty()  # ✅ clear warning when we have data
                 elif len(live_data) == 1:
                     latest_price = live_data["Price"].iloc[-1].item()
                     prev_price   = latest_price   
+                    warning_h.empty()  # ✅ also clear warning
                 else:
                     latest_price = None
                     prev_price   = None
-                    with warning_h:
-                       st.warning("please restart the app")
+                    warning_h.warning("Please restart the app")  # ✅ show warning
                     continue
 
                 #change formula

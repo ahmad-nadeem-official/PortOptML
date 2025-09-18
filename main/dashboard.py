@@ -174,7 +174,7 @@ while True:
                    fig.patch.set_alpha(0)
                    ax.patch.set_alpha(0)
                 
-                st.pyplot(fig, transparent=True)
+                   st.pyplot(fig, transparent=True)
 
 
         time.sleep(interval)  # wait before next refresh

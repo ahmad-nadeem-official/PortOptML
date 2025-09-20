@@ -13,3 +13,10 @@ st.set_page_config(
     page_icon=":crystal_ball:",
     layout="wide",
 )
+
+st.markdown(
+    "<p style='color: #474955; font-size:50px; font-weight:bold;'>Stock Price Predictor</p>", 
+    unsafe_allow_html=True
+)
+
+st.sidebar.header("This is not financial advice. For educational purposes only")

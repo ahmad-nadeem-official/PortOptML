@@ -6,8 +6,10 @@ import yfinance as yf
 from datetime import datetime, timedelta, date
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.neighbors import KNeighborsRegressor
 import xgboost as xgb
-from sklearn.metrics import mean_squared_error, root_mean_squared_error
+from sklearn.metrics import mean_squared_error, root_mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
 
 st.set_page_config(
@@ -162,7 +164,7 @@ X_test_scaled = scaler.fit_transform(x_test)
 st.success("Data Scaled successfully!")
 
 ##################################### Model Training ########################################
-model = xgb.XGBRegressor(
+model_xgb = xgb.XGBRegressor(
     booster='gbtree',             # Booster type ('gbtree', 'gblinear', or 'dart')
     n_jobs=4,                     # Parallel threads; -1 uses all cores.
     random_state=42,              # Random seed for reproducibility.
@@ -181,11 +183,54 @@ model = xgb.XGBRegressor(
     objective='reg:squarederror', # Learning objective (e.g., regression with squared loss).
     eval_metric='rmse'            # Evaluation metric.
 )
-model.fit(X_train_scaled, y_train)
 
-st.success("Model Trained successfully!")
+model_rf = RandomForestRegressor(
+    n_estimators=100,
+    max_depth=5,
+    min_samples_split=2,
+    min_samples_leaf=1,
+    max_features='auto',
+    random_state=42,
+    oob_score=True,
+    bootstrap=False,
+    n_jobs=-1
+)
+
+model_knn = KNeighborsRegressor(
+    n_neighbors=5,
+    weights='uniform',
+    algorithm='auto',
+    leaf_size=30,
+    p=2,
+    metric='minkowski',
+    n_jobs=-1
+)
+
+model_knn.fit(X_train_scaled, y_train)
+st.success("Model Trained successfully on KNN!")
+
+model_rf.fit(X_train_scaled, y_train)
+st.success("Model Trained successfully on Random Forest!")
+
+
+model_xgb.fit(X_train_scaled, y_train)
+st.success("Model Trained successfully on XGBoost!")
+
+
+
+
 
 ##################################### Model Evaluation ########################################
-y_pred = model.predict(X_test_scaled)
-mse = root_mean_squared_error(y_test, y_pred)
-st.success(f"RMSE: {mse:.6f}")
+y_pred_xgb = model_xgb.predict(X_test_scaled)
+y_pred_rf = model_rf.predict(X_test_scaled)
+y_pred_knn = model_knn.predict(X_test_scaled)
+
+
+rmse = root_mean_squared_error(y_test, y_pred_xgb)
+st.success(f"RMSE -- XGB: {rmse:.6f}")
+
+mse = mean_squared_error(y_test, y_pred_rf)
+st.success(f"RMSE -- RF: {mse:.6f}")
+
+mae = mean_absolute_error(y_test, y_pred_knn)
+st.success(f"RMSE -- KNN: {mae:.6f}")

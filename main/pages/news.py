@@ -1,9 +1,22 @@
-from newscatcherapi import NewsCatcherApiClient
+import feedparser
+import streamlit as st
 
-api = NewsCatcherApiClient(x_api_key="YOUR_API_KEY")
+ticker = "AAPL"
+url = f"https://finance.yahoo.com/rss/headline?s={ticker}"
+feed = feedparser.parse(url)
 
-# Example: get news about Apple
-all_articles = api.get_search(q="Apple", lang="en", page_size=5)
-
-for article in all_articles['articles']:
-    print(article['title'], article['link'])
+for entry in feed.entries[:5]:
+    title = entry.title
+    link = entry.link
+    
+    # Some feeds include image in media_content or media_thumbnail
+    image = None
+    if "media_content" in entry:
+        image = entry.media_content[0]['url']
+    elif "media_thumbnail" in entry:
+        image = entry.media_thumbnail[0]['url']
+    
+    st.write(title)
+    st.write("Link:", link)
+    st.write("Image:", image)
+    st.write("-" * 50)

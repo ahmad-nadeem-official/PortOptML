@@ -80,12 +80,22 @@ def get_sp500():
 
 tickers = get_sp500()
 
+if 'tick' not in st.session_state:
+    st.session_state['tick'] = tickers[0] 
+
+choice = st.selectbox("Choose a stock to get its news", tickers, index=tickers.index(st.session_state['tick']))
+st.session_state['tick'] = choice
+
+st.warning("News might take a while to load, please be patient...")
+st.warning("Refresh might shuffle the news order, please be patient...")
+
 
 
 st.set_page_config(layout="wide")
 st.title("Latest News about your favorite stocks")
 
-ticker = "AAPL"
+
+ticker = st.session_state['tick']
 url = f"https://finance.yahoo.com/rss/headline?s={ticker}"
 feed = feedparser.parse(url)
 

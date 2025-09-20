@@ -4,13 +4,14 @@ import pandas as pd
 import numpy as np
 import yfinance as yf
 from datetime import datetime, timedelta, date
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, root_mean_squared_error
 import matplotlib.pyplot as plt
 
 st.set_page_config(
-    page_title="Stock Price Prediction",
+    page_title="Stock Price Prediction Models",
     page_icon=":crystal_ball:",
     layout="wide",
 )
@@ -124,9 +125,67 @@ st.session_state['tick'] = stock_symbol
 
 
 ######################################### Ticker Tape #######################################
-tick = yf.Ticker(stock_symbol)
+tick = yf.Ticker(st.session_state['tick'])
+meta = tick.info
 
 day = date.today()
 
 data = yf.download(st.session_state['tick'], start="2015-01-01", end=day, progress=False)
+st.markdown(f"<h4 style='color: #db4237;'>Record of Last 10 years of {meta['longName']}</h4>", unsafe_allow_html=True)
 st.dataframe(data)
+
+
+######################################## Feature adding #######################################
+data['Return'] = data['Close'].pct_change()  # target
+data['MA10'] = data['Close'].rolling(10).mean()
+data['MA50'] = data['Close'].rolling(50).mean()
+data['Volatility'] = data['Return'].rolling(20).std()
+data = data.dropna()
+st.success("Features added successfully!")
+st.write(data.head(5))
+
+######################################## Train test Splitting ####################################
+features = ['Open','High','Low','Close','Volume','MA10','MA50','Volatility']
+
+x = data[features]
+y = data['Return']
+
+x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.2, random_state=42, shuffle=False)
+st.write(f"Training samples: {x_train.shape[0]}, Testing samples: {x_test.shape[0]}")
+
+
+##################################### scalling ##############################################
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(x_train)
+X_test_scaled = scaler.fit_transform(x_test)
+
+st.success("Data Scaled successfully!")
+
+##################################### Model Training ########################################
+model = xgb.XGBRegressor(
+    booster='gbtree',             # Booster type ('gbtree', 'gblinear', or 'dart')
+    n_jobs=4,                     # Parallel threads; -1 uses all cores.
+    random_state=42,              # Random seed for reproducibility.
+    verbosity=1,                  # Output verbosity.
+    
+    n_estimators=500,             # Number of boosting rounds.
+    learning_rate=0.05,           # Step size shrinkage.
+    max_depth=5,                  # Maximum tree depth.
+    min_child_weight=1,           # Minimum sum of instance weight in a child node.
+    gamma=0.2,                    # Minimum loss reduction for a split.
+    subsample=0.8,                # Subsample ratio of training instances.
+    colsample_bytree=0.8,         # Subsample ratio of columns per tree.
+    reg_alpha=0.1,                # L1 regularization.
+    reg_lambda=1,                 # L2 regularization.
+    
+    objective='reg:squarederror', # Learning objective (e.g., regression with squared loss).
+    eval_metric='rmse'            # Evaluation metric.
+)
+model.fit(X_train_scaled, y_train)
+
+st.success("Model Trained successfully!")
+
+##################################### Model Evaluation ########################################
+y_pred = model.predict(X_test_scaled)
+mse = root_mean_squared_error(y_test, y_pred)
+st.success(f"RMSE: {mse:.6f}")

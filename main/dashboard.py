@@ -15,6 +15,17 @@ st.set_page_config(
 
 st.title("Welcome to the Stock Dashboard")
 
+st.sidebar.markdown(
+    """
+    <div style="background-color:#fff3cd; padding:10px; border-radius:10px; color:#856404;">
+     <b>Disclaimer:</b> Stock prices and news may be delayed or inaccurate. 
+    This tool is for <b>educational purposes only</b> and not investment advice.
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
+
+
 
 results = yf.screen('most_actives')
 top10 = results['quotes'][1:150]
@@ -226,3 +237,9 @@ while True:
     except Exception as e:
         st.error(f"Error fetching live data: {e}")
         time.sleep(30)
+
+
+
+
+
+

@@ -4,6 +4,7 @@ import yfinance as yf
 import pandas as pd
 import requests
 import matplotlib.pyplot as plt
+import time
 
 
 results = yf.screen('most_actives')
@@ -80,15 +81,20 @@ def get_sp500():
 
 tickers = get_sp500()
 
+
+
 if 'tick' not in st.session_state:
     st.session_state['tick'] = tickers[0] 
 
 choice = st.selectbox("Choose a stock to get its news", tickers, index=tickers.index(st.session_state['tick']))
 st.session_state['tick'] = choice
 
-st.warning("News might take a while to load, please be patient...")
-st.warning("Refresh might shuffle the news order, please be patient...")
+warning_h = st.empty()
+warning_h.warning("News might take a while to load, please be patient...")
+time.sleep(3)  # wait 3 seconds
 
+# Replace with second warning
+warning_h.warning("Refresh might shuffle the news order, please be patient...")
 
 
 st.set_page_config(layout="wide")
@@ -114,3 +120,14 @@ for entry in feed.entries[:10]:
     st.write("Link:", link)
     st.write("Image:", image)
     st.write("-" * 50)
+
+
+st.markdown(
+    """
+    <div style="background-color:#fff3cd; padding:10px; border-radius:10px; color:#856404;">
+    ⚠️ <b>Disclaimer:</b> Stock prices and news may be delayed or inaccurate. 
+    This tool is for <b>educational purposes only</b> and not investment advice.
+    </div>
+    """, 
+    unsafe_allow_html=True
+)    

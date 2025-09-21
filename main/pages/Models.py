@@ -159,7 +159,7 @@ st.write(f"Training samples: {x_train.shape[0]}, Testing samples: {x_test.shape[
 ##################################### scalling ##############################################
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(x_train)
-X_test_scaled = scaler.fit_transform(x_test)
+X_test_scaled = scaler.transform(x_test)
 
 st.success("Data Scaled successfully!")
 
@@ -189,10 +189,10 @@ model_rf = RandomForestRegressor(
     max_depth=5,
     min_samples_split=2,
     min_samples_leaf=1,
-    max_features='auto',
+    max_features=5,
     random_state=42,
     oob_score=True,
-    bootstrap=False,
+    bootstrap=True,
     n_jobs=-1
 )
 
@@ -230,7 +230,76 @@ rmse = root_mean_squared_error(y_test, y_pred_xgb)
 st.success(f"RMSE -- XGB: {rmse:.6f}")
 
 mse = mean_squared_error(y_test, y_pred_rf)
-st.success(f"RMSE -- RF: {mse:.6f}")
+st.success(f"MSE -- RF: {mse:.6f}")
 
 mae = mean_absolute_error(y_test, y_pred_knn)
-st.success(f"RMSE -- KNN: {mae:.6f}")
+st.success(f"MAE -- KNN: {mae:.6f}")
+
+###################################### Visualization ########################################
+# st.markdown("<h3 style='color: #00F0A8;'>Model Predictions vs Actual Returns</h3>", unsafe_allow_html=True)
+# plt.figure(figsize=(14,7))
+# plt.plot(y_test.index, y_test, label='Actual Returns', color='blue')
+# plt.plot(y_test.index, y_pred_xgb, label='XGBoost Predictions', color='red', alpha=0.7)
+# plt.plot(y_test.index, y_pred_rf, label='Random Forest Predictions', color='green', alpha=0.7)
+# plt.plot(y_test.index, y_pred_knn, label='KNN Predictions', color='orange', alpha=0.7)
+# plt.xlabel('Date')
+# plt.ylabel('Returns')
+# plt.title(f'{meta["longName"]} Returns Prediction')
+# plt.legend()
+# plt.grid()
+# st.pyplot(plt)
+# plt.clf()
+
+####################################### Streamlit version #######################################
+pred_df = pd.DataFrame({
+    'Actual Returns': y_test.values,
+    'XGBoost Predictions': y_pred_xgb,
+    'Random Forest Predictions': y_pred_rf,
+    'KNN Predictions': y_pred_knn
+}, index=y_test.index)
+
+st.markdown("<h3 style='color: #00F0A8;'>Model Predictions vs Actual Returns</h3>", unsafe_allow_html=True)
+st.line_chart(pred_df)
+################################### Session state of inputs########################################
+
+
+# future_days = st.slider("Select number of days to predict into the future", 1, 30, 7)
+
+
+####################################### Future Prediction #########################################
+st.sidebar.markdown("<h3 style='color: #edd040;'>Future Price Prediction</h3>", unsafe_allow_html=True)
+st.sidebar.header("Enter future stock data")
+open_price = st.sidebar.number_input("Open Price", value=float(data['Open'].iloc[-1]))
+high_price = st.sidebar.number_input("High Price", value=float(data['High'].iloc[-1]))
+low_price = st.sidebar.number_input("Low Price", value=float(data['Low'].iloc[-1]))
+close_price = st.sidebar.number_input("Close Price", value=float(data['Close'].iloc[-1]))
+volume = st.sidebar.number_input("Volume", value=int(data['Volume'].iloc[-1]))
+
+# Compute moving averages and volatility from recent historical data
+ma10 = data['Close'].rolling(10).mean().iloc[-1]
+ma50 = data['Close'].rolling(50).mean().iloc[-1]
+volatility = data['Return'].rolling(20).std().iloc[-1]
+
+# Prepare feature vector
+future_features = pd.DataFrame({
+    'Open': [open_price],
+    'High': [high_price],
+    'Low': [low_price],
+    'Close': [close_price],
+    'Volume': [volume],
+    'MA10': [ma10],
+    'MA50': [ma50],
+    'Volatility': [volatility]
+})
+
+# Scale features
+future_scaled = scaler.transform(future_features)
+
+# Predict returns
+pred_xgb = model_xgb.predict(future_scaled)[0]
+pred_rf = model_rf.predict(future_scaled)[0]
+pred_knn = model_knn.predict(future_scaled)[0]
+
+st.success(f"Predicted Returns:\nXGBoost: {pred_xgb:.6f}\nRandom Forest: {pred_rf:.6f}\nKNN: {pred_knn:.6f}")
+
+

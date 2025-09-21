@@ -261,19 +261,34 @@ pred_df = pd.DataFrame({
 st.markdown("<h3 style='color: #00F0A8;'>Model Predictions vs Actual Returns</h3>", unsafe_allow_html=True)
 st.line_chart(pred_df)
 ################################### Session state of inputs########################################
+####################################### Initialize session_state #################################
+if 'open_price' not in st.session_state:
+    st.session_state['open_price'] = float(data['Open'].iloc[-1])
+if 'high_price' not in st.session_state:
+    st.session_state['high_price'] = float(data['High'].iloc[-1])
+if 'low_price' not in st.session_state:
+    st.session_state['low_price'] = float(data['Low'].iloc[-1])
+if 'close_price' not in st.session_state:
+    st.session_state['close_price'] = float(data['Close'].iloc[-1])
+if 'volume' not in st.session_state:
+    st.session_state['volume'] = int(data['Volume'].iloc[-1])
 
-
-# future_days = st.slider("Select number of days to predict into the future", 1, 30, 7)
-
-
-####################################### Future Prediction #########################################
+####################################### Future Prediction Sidebar #################################
 st.sidebar.markdown("<h3 style='color: #edd040;'>Future Price Prediction</h3>", unsafe_allow_html=True)
 st.sidebar.header("Enter future stock data")
-open_price = st.sidebar.number_input("Open Price", value=float(data['Open'].iloc[-1]))
-high_price = st.sidebar.number_input("High Price", value=float(data['High'].iloc[-1]))
-low_price = st.sidebar.number_input("Low Price", value=float(data['Low'].iloc[-1]))
-close_price = st.sidebar.number_input("Close Price", value=float(data['Close'].iloc[-1]))
-volume = st.sidebar.number_input("Volume", value=int(data['Volume'].iloc[-1]))
+
+# Use session_state to keep values persistent
+st.session_state['open_price'] = st.sidebar.number_input(
+    "Open Price", value=st.session_state['open_price'])
+st.session_state['high_price'] = st.sidebar.number_input(
+    "High Price", value=st.session_state['high_price'])
+st.session_state['low_price'] = st.sidebar.number_input(
+    "Low Price", value=st.session_state['low_price'])
+st.session_state['close_price'] = st.sidebar.number_input(
+    "Close Price", value=st.session_state['close_price'])
+st.session_state['volume'] = st.sidebar.number_input(
+    "Volume", value=st.session_state['volume'])
+
 
 # Compute moving averages and volatility from recent historical data
 ma10 = data['Close'].rolling(10).mean().iloc[-1]
@@ -282,11 +297,11 @@ volatility = data['Return'].rolling(20).std().iloc[-1]
 
 # Prepare feature vector
 future_features = pd.DataFrame({
-    'Open': [open_price],
-    'High': [high_price],
-    'Low': [low_price],
-    'Close': [close_price],
-    'Volume': [volume],
+    'Open': [st.session_state['open_price']],
+    'High': [st.session_state['high_price']],
+    'Low': [st.session_state['low_price']],
+    'Close': [st.session_state['close_price']],
+    'Volume': [st.session_state['volume']],
     'MA10': [ma10],
     'MA50': [ma50],
     'Volatility': [volatility]

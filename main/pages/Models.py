@@ -216,24 +216,36 @@ st.success("Model Trained successfully on Random Forest!")
 model_xgb.fit(X_train_scaled, y_train)
 st.success("Model Trained successfully on XGBoost!")
 
-
-
-
-
 ##################################### Model Evaluation ########################################
 y_pred_xgb = model_xgb.predict(X_test_scaled)
 y_pred_rf = model_rf.predict(X_test_scaled)
 y_pred_knn = model_knn.predict(X_test_scaled)
 
+if y_pred_xgb not in st.session_state:
+    st.session_state['y_pred_xgb'] = y_pred_xgb
+if y_pred_rf not in st.session_state:
+    st.session_state['y_pred_rf'] = y_pred_rf
+if y_pred_knn not in st.session_state:
+    st.session_state['y_pred_knn'] = y_pred_knn
+
+
+
+
 
 rmse = root_mean_squared_error(y_test, y_pred_xgb)
-st.success(f"RMSE -- XGB: {rmse:.6f}")
-
 mse = mean_squared_error(y_test, y_pred_rf)
-st.success(f"MSE -- RF: {mse:.6f}")
-
 mae = mean_absolute_error(y_test, y_pred_knn)
-st.success(f"MAE -- KNN: {mae:.6f}")
+#################################### session state for model eval #############################
+if 'model_xgb' not in st.session_state:
+    st.session_state['model_xgb'] = rmse
+if 'model_rf' not in st.session_state:
+    st.session_state['model_rf'] = mse
+if 'model_knn' not in st.session_state:
+    st.session_state['model_knn'] = mae
+
+st.success(f"RMSE -- XGB: {st.session_state['model_xgb']:.6f}")
+st.success(f"MSE -- RF: {st.session_state['model_rf']:.6f}")
+st.success(f"MAE -- KNN: {st.session_state['model_knn']:.6f}")
 
 ###################################### Visualization ########################################
 # st.markdown("<h3 style='color: #00F0A8;'>Model Predictions vs Actual Returns</h3>", unsafe_allow_html=True)
@@ -253,9 +265,9 @@ st.success(f"MAE -- KNN: {mae:.6f}")
 ####################################### Streamlit version #######################################
 pred_df = pd.DataFrame({
     'Actual Returns': y_test.values,
-    'XGBoost Predictions': y_pred_xgb,
-    'Random Forest Predictions': y_pred_rf,
-    'KNN Predictions': y_pred_knn
+    'XGBoost Predictions': st.session_state['y_pred_xgb'],
+    'Random Forest Predictions': st.session_state['y_pred_rf'],
+    'KNN Predictions': st.session_state['y_pred_knn']
 }, index=y_test.index)
 
 st.markdown("<h3 style='color: #00F0A8;'>Model Predictions vs Actual Returns</h3>", unsafe_allow_html=True)
@@ -277,7 +289,7 @@ if 'volume' not in st.session_state:
 st.sidebar.markdown("<h3 style='color: #edd040;'>Future Price Prediction</h3>", unsafe_allow_html=True)
 st.sidebar.header("Enter future stock data")
 
-# Use session_state to keep values persistent
+
 st.session_state['open_price'] = st.sidebar.number_input("Open Price", value=st.session_state['open_price'])
 st.session_state['high_price'] = st.sidebar.number_input("High Price", value=st.session_state['high_price'])
 st.session_state['low_price'] = st.sidebar.number_input("Low Price", value=st.session_state['low_price'])

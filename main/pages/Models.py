@@ -260,7 +260,7 @@ pred_df = pd.DataFrame({
 
 st.markdown("<h3 style='color: #00F0A8;'>Model Predictions vs Actual Returns</h3>", unsafe_allow_html=True)
 st.line_chart(pred_df)
-################################### Session state of inputs########################################
+
 ####################################### Initialize session_state #################################
 if 'open_price' not in st.session_state:
     st.session_state['open_price'] = float(data['Open'].iloc[-1])
@@ -278,16 +278,11 @@ st.sidebar.markdown("<h3 style='color: #edd040;'>Future Price Prediction</h3>", 
 st.sidebar.header("Enter future stock data")
 
 # Use session_state to keep values persistent
-st.session_state['open_price'] = st.sidebar.number_input(
-    "Open Price", value=st.session_state['open_price'])
-st.session_state['high_price'] = st.sidebar.number_input(
-    "High Price", value=st.session_state['high_price'])
-st.session_state['low_price'] = st.sidebar.number_input(
-    "Low Price", value=st.session_state['low_price'])
-st.session_state['close_price'] = st.sidebar.number_input(
-    "Close Price", value=st.session_state['close_price'])
-st.session_state['volume'] = st.sidebar.number_input(
-    "Volume", value=st.session_state['volume'])
+st.session_state['open_price'] = st.sidebar.number_input("Open Price", value=st.session_state['open_price'])
+st.session_state['high_price'] = st.sidebar.number_input("High Price", value=st.session_state['high_price'])
+st.session_state['low_price'] = st.sidebar.number_input("Low Price", value=st.session_state['low_price'])
+st.session_state['close_price'] = st.sidebar.number_input("Close Price", value=st.session_state['close_price'])
+st.session_state['volume'] = st.sidebar.number_input("Volume", value=st.session_state['volume'])
 
 
 # Compute moving averages and volatility from recent historical data

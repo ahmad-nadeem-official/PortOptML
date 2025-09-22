@@ -18,7 +18,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.sidebar.title("TRADMINCER")
+st.sidebar.title("TRADMINCER v1.02")
 
 st.markdown("<p style='color: #474955; font-size:50px; font-weight:bold;'>Stock Price Predictor</p>",unsafe_allow_html=True)
 

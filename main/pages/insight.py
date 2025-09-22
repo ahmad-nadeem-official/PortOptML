@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 st.set_page_config(layout="wide")
-st.sidebar.title("TRADMINCER")
+st.sidebar.title("TRADMINCER v1.02")
 
 results = yf.screen('most_actives')
 top10 = results['quotes'][1:150]

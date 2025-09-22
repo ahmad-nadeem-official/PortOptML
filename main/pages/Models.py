@@ -293,11 +293,23 @@ st.sidebar.markdown("<h3 style='color: #edd040;'>Future Price Prediction</h3>", 
 st.sidebar.header("Enter future stock data")
 
 
-st.session_state['open_price'] = st.sidebar.number_input("Open Price", value=st.session_state['open_price'])
-st.session_state['high_price'] = st.sidebar.number_input("High Price", value=st.session_state['high_price'])
-st.session_state['low_price'] = st.sidebar.number_input("Low Price", value=st.session_state['low_price'])
-st.session_state['close_price'] = st.sidebar.number_input("Close Price", value=st.session_state['close_price'])
-st.session_state['volume'] = st.sidebar.number_input("Volume", value=st.session_state['volume'])
+with st.sidebar.form("future_form"):
+    st.markdown("<h3 style='color: #edd040;'>Future Price Prediction</h3>", unsafe_allow_html=True)
+
+    open_price = st.number_input("Open Price", value=st.session_state.get("open_price", 0.0))
+    high_price = st.number_input("High Price", value=st.session_state.get("high_price", 0.0))
+    low_price = st.number_input("Low Price", value=st.session_state.get("low_price", 0.0))
+    close_price = st.number_input("Close Price", value=st.session_state.get("close_price", 0.0))
+    volume = st.number_input("Volume", value=st.session_state.get("volume", 0))
+
+    submitted = st.form_submit_button("Predict Future Returns")
+
+    if submitted:
+      st.session_state['open_price'] = open_price
+      st.session_state['high_price'] = high_price
+      st.session_state['low_price'] = low_price
+      st.session_state['close_price'] = close_price
+      st.session_state['volume'] = volume
 
 
 # Compute moving averages and volatility from recent historical data
@@ -307,11 +319,11 @@ volatility = data['Return'].rolling(20).std().iloc[-1]
 
 # Prepare feature vector
 future_features = pd.DataFrame({
-    'Open': [st.session_state['open_price']],
-    'High': [st.session_state['high_price']],
-    'Low': [st.session_state['low_price']],
-    'Close': [st.session_state['close_price']],
-    'Volume': [st.session_state['volume']],
+    'Open': [open_price],
+    'High': [high_price],
+    'Low': [low_price],
+    'Close': [close_price],
+    'Volume': [volume],
     'MA10': [ma10],
     'MA50': [ma50],
     'Volatility': [volatility]
@@ -321,6 +333,10 @@ future_features = pd.DataFrame({
 future_scaled = scaler.transform(future_features)
 
 # Predict returns
+but = st.sidebar.button("Predict Future Returns")
+if not but:
+    st.stop()
+
 pred_xgb = model_xgb.predict(future_scaled)[0]
 pred_rf = model_rf.predict(future_scaled)[0]
 pred_knn = model_knn.predict(future_scaled)[0]

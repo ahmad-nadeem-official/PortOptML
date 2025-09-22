@@ -98,9 +98,34 @@ st.write("This page allows you to analyze and optimize your stock portfolio usin
 
 st.markdown("<h3 style='color: #00F0A8;'>Choose your stock to get started</h3>", unsafe_allow_html=True)
 
+############################################## stock Data Fetching #######################################
+@st.cache_data
+def get_sp500():
+    url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    response = requests.get(url, headers=headers)
+    table = pd.read_html(response.text)[0]
+    return table["Symbol"].tolist()
+
+
+tickers = get_sp500()
+
+if 'tick' not in st.session_state:
+    st.session_state['tick'] = tickers[0]
+
+
+
+
 
 ################################################# Portfolio Section #######################################
 st.header("Portfolio Input")
 st.write("Enter your stock portfolio details below. You can add multiple stocks along with their quantities.")
 
+st.sidebar.header("Add Stock to Portfolio")
 
+stock_symbol = st.sidebar.selectbox("Enter Stock Symbol", tickers, index=tickers.index(st.session_state['tick']))
+stock_quantity = st.sidebar.number_input("Quantity", min_value=1, value=10)
+submit_button = st.sidebar.button('Add to Portfolio')

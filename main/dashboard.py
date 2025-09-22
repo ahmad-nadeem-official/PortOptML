@@ -12,7 +12,7 @@ st.set_page_config(
     page_icon=":chart_with_upwards_trend:",
     layout="wide",
 )
-
+st.sidebar.title("TRADMINCER")
 st.title("Welcome to the Stock Dashboard")
 
 st.sidebar.markdown(

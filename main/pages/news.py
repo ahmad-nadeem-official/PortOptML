@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import time
 
 
+st.sidebar.title("TRADMINCER")
+
 results = yf.screen('most_actives')
 top10 = results['quotes'][1:150]
 

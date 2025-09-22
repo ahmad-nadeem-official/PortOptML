@@ -5,6 +5,7 @@ import requests
 
 
 st.set_page_config(layout="wide")
+st.sidebar.title("TRADMINCER")
 
 results = yf.screen('most_actives')
 top10 = results['quotes'][1:150]

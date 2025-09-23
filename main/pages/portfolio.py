@@ -4,8 +4,9 @@ import pandas as pd
 import requests
 import numpy as np
 import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 import time
+import scipy.optimize as minimize
 
 st.set_page_config(layout="wide")
 st.sidebar.title("TRADMINCER v1.02")
@@ -133,32 +134,123 @@ if "list" not in st.session_state:
 if "quant" not in st.session_state:
     st.session_state["quant"] = []
 
+if "price" not in st.session_state:
+    st.session_state["price"] = []
 
+if 'u_price' not in st.session_state:
+    st.session_state['u_price'] = [] 
 
 with st.sidebar.form("portfolio_form", clear_on_submit=True):
     stock_symbol = st.selectbox(
         "Enter Stock Symbol", tickers, index=tickers.index(st.session_state["tick"])
     )
-
-
     stock_quantity = st.number_input("Quantity", min_value=1, value=10)
+
+    ticker = yf.Ticker(stock_symbol)
+    u_price = ticker.fast_info['last_price']
+    price = u_price * stock_quantity
     
+    # st.write("Live Price (fast):", price)
+
+
     submit_button = st.form_submit_button("Add to Portfolio")
 
     if submit_button:
         st.session_state["list"].append(stock_symbol)
         st.session_state["quant"].append(stock_quantity)
+        st.session_state["price"].append(price)
+        st.session_state['u_price'].append(u_price)
 
 # ✅ Build dataframe after updates
 new_data = pd.DataFrame({
     "stocks": st.session_state["list"],
-    "quantity": st.session_state["quant"]
+    "quantity": st.session_state["quant"],
+    "price" : st.session_state["price"],
+    "unit_price": st.session_state['u_price']
 })
 
 st.dataframe(new_data, use_container_width=True)
 
 st.sidebar.info("Form will be refresh once you added a stock and its quantity")
 st.sidebar.info("If you refresh the page, all data will be lost")
+
+# def get_live_data(symbol):
+#     data = yf.download(tickers=symbol, period="1d", interval="1m", progress=False)
+#     if data.empty:
+#         return pd.DataFrame(columns=["Price"])
+#     return data[["Close"]].rename(columns={"Close": "Price"})
+
+# live_data = get_live_data(stock_symbol).tail(50)
+
+
+##########################################portfolio Analysis ##########################################
+st.header("Portfolio Analysis")
+
+today = date.today()
+
+if new_data.empty:
+    st.warning("Please add stocks to your portfolio to see the analysis.")
+    st.stop()
+
+data = yf.download(new_data['stocks'].tolist(), start="2015-01-01", end=today)
+data = data['Close']
+st.line_chart(data,x_label="last 10 years till now", y_label="stock prices", use_container_width=True)
+
+returns = data.pct_change().dropna()
+
+mean_returns = returns.mean()
+cov_matrix = returns.cov()
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("Mean Returns")
+    st.success(f"Mean returns calculated successfully! {mean_returns.shape[0]}")
+    
+with col2:
+    st.subheader("Covariance Matrix")
+    st.write(cov_matrix)
+
+################################## Portfolio Simulation/ wieghts ##########################################
+weights = np.array([1/len(data.columns)] * len(data.columns))
+
+def portfolio_performance(weights, mean_returns, cov_matrix):
+    ret = np.dot(weights, mean_returns) * 252  # annualized return
+    vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix * 252, weights)))  # annualized volatility
+    sharpe = ret / vol
+    return ret, vol, sharpe
+
+# Step 5: Objective -> minimize negative Sharpe (maximize Sharpe)
+def neg_sharpe(weights):
+    return -portfolio_performance(weights)[2]
+
+# Step 6: Constraints (sum of weights = 1)
+constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
+bounds = tuple((0, 1) for asset in range(len(data.columns)))
+init_guess = len(data.columns) * [1. / len(data.columns)]
+
+
+
+################################# Portfolio Performance Calculation ##########################################
+
+
+# ret, vol, sharpe = portfolio_performance(weights, mean_returns, cov_matrix)
+
+# st.subheader("Portfolio Performance with Equal Weights")
+# st.write(f"✅ Expected Annual Return: {ret:.2%}")
+# st.write(f"📉 Annual Volatility: {vol:.2%}")
+# st.write(f"📊 Sharpe Ratio: {sharpe:.2f}")
+
+
+# Step 7: Optimization
+opt_results = minimize(neg_sharpe, init_guess, bounds=bounds, constraints=constraints)
+opt_weights = opt_results.x
+
+st.write("Optimal Weights:", opt_weights)
+st.write("Performance:", portfolio_performance(opt_weights))
+
+######################################## Stock Analysis Section #######################################  
+
 
 
 

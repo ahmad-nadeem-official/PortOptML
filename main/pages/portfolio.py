@@ -116,6 +116,8 @@ tickers = get_sp500()
 if 'tick' not in st.session_state:
     st.session_state['tick'] = tickers[0]
 
+    
+
 
 
 ################################################# Portfolio Section #######################################
@@ -124,24 +126,35 @@ st.write("Enter your stock portfolio details below. You can add multiple stocks 
 
 st.sidebar.header("Add Stock to Portfolio")
 
-if 'list' not in st .session_state:
-    st.session_state['list'] = []
 
-if 'quant' not in st.session_state:
-    st.session_state['quant'] = []
+if "list" not in st.session_state:
+    st.session_state["list"] = []
 
-new_data = pd.DataFrame({'stocks': [st.session_state['list']], 'quantity': [st.session_state['quant']]})
-
-
-stock_symbol = st.sidebar.selectbox("Enter Stock Symbol", tickers, index=tickers.index(st.session_state['tick']))
+if "quant" not in st.session_state:
+    st.session_state["quant"] = []
 
 
-stock_quantity = st.sidebar.number_input("Quantity", min_value=1, value=10)
+
+with st.sidebar.form("portfolio_form", clear_on_submit=True):
+    stock_symbol = st.selectbox(
+        "Enter Stock Symbol", tickers, index=tickers.index(st.session_state["tick"])
+    )
+    st.session_state["tick"] = stock_symbol 
 
 
-submit_button = st.sidebar.button('Add to Portfolio')
-if submit_button:
-    st.session_state['list'].append(stock_symbol)
-    st.session_state['quant'].append(stock_quantity)
+    stock_quantity = st.number_input("Quantity", min_value=1, value=10)
+    
+    submit_button = st.form_submit_button("Add to Portfolio")
+
+    if submit_button:
+        st.session_state["list"].append(stock_symbol)
+        st.session_state["quant"].append(stock_quantity)
+
+# ✅ Build dataframe after updates
+new_data = pd.DataFrame({
+    "stocks": st.session_state["list"],
+    "quantity": st.session_state["quant"]
+})
 
 st.dataframe(new_data, use_container_width=True)
+

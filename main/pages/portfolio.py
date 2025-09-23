@@ -118,14 +118,30 @@ if 'tick' not in st.session_state:
 
 
 
-
-
 ################################################# Portfolio Section #######################################
 st.header("Portfolio Input")
 st.write("Enter your stock portfolio details below. You can add multiple stocks along with their quantities.")
 
 st.sidebar.header("Add Stock to Portfolio")
 
+if 'list' not in st .session_state:
+    st.session_state['list'] = []
+
+if 'quant' not in st.session_state:
+    st.session_state['quant'] = []
+
+new_data = pd.DataFrame({'stocks': [st.session_state['list']], 'quantity': [st.session_state['quant']]})
+
+
 stock_symbol = st.sidebar.selectbox("Enter Stock Symbol", tickers, index=tickers.index(st.session_state['tick']))
+
+
 stock_quantity = st.sidebar.number_input("Quantity", min_value=1, value=10)
+
+
 submit_button = st.sidebar.button('Add to Portfolio')
+if submit_button:
+    st.session_state['list'].append(stock_symbol)
+    st.session_state['quant'].append(stock_quantity)
+
+st.dataframe(new_data, use_container_width=True)

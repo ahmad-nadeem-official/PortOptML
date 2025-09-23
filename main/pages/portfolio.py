@@ -116,7 +116,7 @@ tickers = get_sp500()
 if 'tick' not in st.session_state:
     st.session_state['tick'] = tickers[0]
 
-    
+
 
 
 
@@ -139,7 +139,6 @@ with st.sidebar.form("portfolio_form", clear_on_submit=True):
     stock_symbol = st.selectbox(
         "Enter Stock Symbol", tickers, index=tickers.index(st.session_state["tick"])
     )
-    st.session_state["tick"] = stock_symbol 
 
 
     stock_quantity = st.number_input("Quantity", min_value=1, value=10)
@@ -157,4 +156,10 @@ new_data = pd.DataFrame({
 })
 
 st.dataframe(new_data, use_container_width=True)
+
+st.sidebar.info("Form will be refresh once you added a stock and its quantity")
+st.sidebar.info("If you refresh the page, all data will be lost")
+
+
+
 

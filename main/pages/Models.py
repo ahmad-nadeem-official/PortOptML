@@ -335,7 +335,9 @@ with st.sidebar.form("future_form"):
     but = st.form_submit_button("Predict Future Returns")
     if not but:
         st.stop()
-        
+
+    st.info("After predicting one time the form will return to past values")    
+
 
 pred_xgb = model_xgb.predict(future_scaled)[0]
 pred_rf = model_rf.predict(future_scaled)[0]

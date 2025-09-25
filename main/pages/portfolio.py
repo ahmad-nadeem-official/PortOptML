@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 from datetime import date, datetime, timedelta
 import time
 from scipy.optimize import minimize
+import plotly.express as px
+import matplotlib.cm as cm
+
 
 st.set_page_config(layout="wide")
 st.sidebar.title("TRADMINCER v1.02")
@@ -252,9 +255,32 @@ init_guess = num_assets * [1. / num_assets]
 opt_results = minimize(neg_sharpe, init_guess, bounds=bounds, constraints=constraints)
 opt_weights = opt_results.x
 
-st.subheader("Optimal Portfolio Weights")
-for stock, weight in zip(new_data['stocks'], opt_weights):
-    st.write(f"{stock}: {weight:.2%}")
+coll1, coll2 = st.columns(2)
+
+
+with coll1:
+  st.subheader("Optimal Portfolio Weights")
+  for stock, weight in zip(new_data['stocks'], opt_weights):
+      st.markdown(
+          f"<span style='color: #00FF00; font-weight: bold'>{stock}</span>: "
+          f"<b>{weight:.2%}</b>",
+          unsafe_allow_html=True
+      )
+      data = pd.Series([stock], index=[weight])  
+
+with coll2:
+   colors = cm.tab20(np.linspace(0, 1, len(new_data['stocks'])))
+   fig, ax = plt.subplots()
+   ax.pie(
+       opt_weights,
+       labels=new_data['stocks'],
+       autopct='%1.1f%%',
+       startangle=140,
+       colors=colors
+   )
+   ax.axis('equal')  # Equal aspect ratio ensures the pie is a circle
+   st.pyplot(fig)
+
 
 ret, vol, sharpe = portfolio_performance(opt_weights)
 
@@ -268,9 +294,3 @@ with col2:
 with col3:
     st.subheader("Sharpe Ratio")
     st.success(f"{sharpe:.2f}")
-
-
-
-
-
-

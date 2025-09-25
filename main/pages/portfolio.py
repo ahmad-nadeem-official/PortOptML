@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import date, datetime, timedelta
 import time
-import scipy.optimize as minimize
+from scipy.optimize import minimize
 
 st.set_page_config(layout="wide")
 st.sidebar.title("TRADMINCER v1.02")
@@ -156,10 +156,13 @@ with st.sidebar.form("portfolio_form", clear_on_submit=True):
     submit_button = st.form_submit_button("Add to Portfolio")
 
     if submit_button:
-        st.session_state["list"].append(stock_symbol)
-        st.session_state["quant"].append(stock_quantity)
-        st.session_state["price"].append(price)
-        st.session_state['u_price'].append(u_price)
+        if stock_symbol in st.session_state["list"]:
+          st.sidebar.error(f"{stock_symbol} already added! choose another stock")
+        else:
+         st.session_state["list"].append(stock_symbol)
+         st.session_state["quant"].append(stock_quantity)
+         st.session_state["price"].append(price)
+         st.session_state['u_price'].append(u_price)
 
 # ✅ Build dataframe after updates
 new_data = pd.DataFrame({
@@ -192,9 +195,23 @@ if new_data.empty:
     st.warning("Please add stocks to your portfolio to see the analysis.")
     st.stop()
 
+
 data = yf.download(new_data['stocks'].tolist(), start="2015-01-01", end=today)
 data = data['Close']
 st.line_chart(data,x_label="last 10 years till now", y_label="stock prices", use_container_width=True)
+
+if len(new_data["stocks"]) < 2:
+    st.warning("Please add at least two different stocks to your portfolio for analysis")
+    st.stop()
+
+# if new_data["stocks"].duplicated().any():
+#     st.error("Duplicate stock symbols detected! Please remove duplicates before proceeding.")
+#     col = st.selectbox("Select a stock to remove", new_data["stocks"].tolist())
+#     new_data = new_data[new_data["stocks"] != col]  # Remove selected stock
+#     for col in ["stocks", "price", "quant", "u_price"]:
+#      if col in st.session_state:
+#         del st.session_state[col]
+#     st.stop()
 
 returns = data.pct_change().dropna()
 
@@ -212,9 +229,11 @@ with col2:
     st.write(cov_matrix)
 
 ################################## Portfolio Simulation/ wieghts ##########################################
-weights = np.array([1/len(data.columns)] * len(data.columns))
 
-def portfolio_performance(weights, mean_returns, cov_matrix):
+num_assets = len(new_data['stocks'])
+
+# Step 4: Portfolio performance function
+def portfolio_performance(weights):
     ret = np.dot(weights, mean_returns) * 252  # annualized return
     vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix * 252, weights)))  # annualized volatility
     sharpe = ret / vol
@@ -226,30 +245,30 @@ def neg_sharpe(weights):
 
 # Step 6: Constraints (sum of weights = 1)
 constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
-bounds = tuple((0, 1) for asset in range(len(data.columns)))
-init_guess = len(data.columns) * [1. / len(data.columns)]
-
-
-
-################################# Portfolio Performance Calculation ##########################################
-
-
-# ret, vol, sharpe = portfolio_performance(weights, mean_returns, cov_matrix)
-
-# st.subheader("Portfolio Performance with Equal Weights")
-# st.write(f"✅ Expected Annual Return: {ret:.2%}")
-# st.write(f"📉 Annual Volatility: {vol:.2%}")
-# st.write(f"📊 Sharpe Ratio: {sharpe:.2f}")
-
+bounds = tuple((0, 1) for asset in range(num_assets))
+init_guess = num_assets * [1. / num_assets]
 
 # Step 7: Optimization
 opt_results = minimize(neg_sharpe, init_guess, bounds=bounds, constraints=constraints)
 opt_weights = opt_results.x
 
-st.write("Optimal Weights:", opt_weights)
-st.write("Performance:", portfolio_performance(opt_weights))
+st.subheader("Optimal Portfolio Weights")
+for stock, weight in zip(new_data['stocks'], opt_weights):
+    st.write(f"{stock}: {weight:.2%}")
 
-######################################## Stock Analysis Section #######################################  
+ret, vol, sharpe = portfolio_performance(opt_weights)
+
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.subheader("Annual Return")
+    st.success(f"{ret:.2%}")
+with col2:
+    st.subheader("Volatility")
+    st.success(f"{vol:.2%}")
+with col3:
+    st.subheader("Sharpe Ratio")
+    st.success(f"{sharpe:.2f}")
+
 
 
 

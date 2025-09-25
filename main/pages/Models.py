@@ -335,19 +335,19 @@ with st.sidebar.form("future_form"):
     but = st.form_submit_button("Predict Future Returns")
     if not but:
         st.stop()
+        
 
-    pred_xgb = model_xgb.predict(future_scaled)[0]
-    pred_rf = model_rf.predict(future_scaled)[0]
-    pred_knn = model_knn.predict(future_scaled)[0]
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.success(f"XGBoost: {pred_xgb:.6f}")
+pred_xgb = model_xgb.predict(future_scaled)[0]
+pred_rf = model_rf.predict(future_scaled)[0]
+pred_knn = model_knn.predict(future_scaled)[0]
+col1, col2, col3 = st.columns(3)
 
-    with col2:
-        st.success(f"Random Forest: {pred_rf:.6f}")
-    with col3:
-        st.success(f"KNN: {pred_knn:.6f}")    
+with col1:
+    st.info(f"XGBoost: {pred_xgb:.6f}")
+with col2:
+    st.info(f"Random Forest: {pred_rf:.6f}")
+with col3:
+    st.info(f"KNN: {pred_knn:.6f}")    
     
     
     

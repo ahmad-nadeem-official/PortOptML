@@ -301,45 +301,55 @@ with st.sidebar.form("future_form"):
     close_price = st.number_input("Close Price", value=st.session_state.get("close_price", 0.0))
     volume = st.number_input("Volume", value=st.session_state.get("volume", 0))
 
-    submitted = st.form_submit_button("Add Data")
+    # submitted = st.form_submit_button("Add Data")
 
-    if submitted:
-      st.session_state['open_price'] = open_price
-      st.session_state['high_price'] = high_price
-      st.session_state['low_price'] = low_price
-      st.session_state['close_price'] = close_price
-      st.session_state['volume'] = volume
+    # if submitted :
+    st.session_state['open_price'] = open_price
+    st.session_state['high_price'] = high_price
+    st.session_state['low_price'] = low_price
+    st.session_state['close_price'] = close_price
+    st.session_state['volume'] = volume
 
 
-# Compute moving averages and volatility from recent historical data
-ma10 = data['Close'].rolling(10).mean().iloc[-1]
-ma50 = data['Close'].rolling(50).mean().iloc[-1]
-volatility = data['Return'].rolling(20).std().iloc[-1]
+    # Compute moving averages and volatility from recent historical data
+    ma10 = data['Close'].rolling(10).mean().iloc[-1]
+    ma50 = data['Close'].rolling(50).mean().iloc[-1]
+    volatility = data['Return'].rolling(20).std().iloc[-1]
 
-# Prepare feature vector
-future_features = pd.DataFrame({
-    'Open': [open_price],
-    'High': [high_price],
-    'Low': [low_price],
-    'Close': [close_price],
-    'Volume': [volume],
-    'MA10': [ma10],
-    'MA50': [ma50],
-    'Volatility': [volatility]
-})
+    # Prepare feature vector
+    future_features = pd.DataFrame({
+        'Open': [open_price],
+        'High': [high_price],
+        'Low': [low_price],
+        'Close': [close_price],
+        'Volume': [volume],
+        'MA10': [ma10],
+        'MA50': [ma50],
+        'Volatility': [volatility]
+    })
 
-# Scale features
-future_scaled = scaler.transform(future_features)
+    # Scale features
+    future_scaled = scaler.transform(future_features)
+    
+    # Predict returns
+    but = st.form_submit_button("Predict Future Returns")
+    if not but:
+        st.stop()
 
-# Predict returns
-but = st.sidebar.button("Predict Future Returns")
-if not but:
-    st.stop()
+    pred_xgb = model_xgb.predict(future_scaled)[0]
+    pred_rf = model_rf.predict(future_scaled)[0]
+    pred_knn = model_knn.predict(future_scaled)[0]
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.success(f"XGBoost: {pred_xgb:.6f}")
 
-pred_xgb = model_xgb.predict(future_scaled)[0]
-pred_rf = model_rf.predict(future_scaled)[0]
-pred_knn = model_knn.predict(future_scaled)[0]
-
-st.success(f"Predicted Returns:\nXGBoost: {pred_xgb:.6f}\nRandom Forest: {pred_rf:.6f}\nKNN: {pred_knn:.6f}")
+    with col2:
+        st.success(f"Random Forest: {pred_rf:.6f}")
+    with col3:
+        st.success(f"KNN: {pred_knn:.6f}")    
+    
+    
+    
 
 

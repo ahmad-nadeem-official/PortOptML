@@ -289,7 +289,6 @@ if 'volume' not in st.session_state:
     st.session_state['volume'] = int(data['Volume'].iloc[-1])
 
 ####################################### Future Prediction Sidebar #################################
-st.sidebar.markdown("<h3 style='color: #edd040;'>Future Price Prediction</h3>", unsafe_allow_html=True)
 st.sidebar.header("Enter future stock data")
 
 
@@ -302,7 +301,7 @@ with st.sidebar.form("future_form"):
     close_price = st.number_input("Close Price", value=st.session_state.get("close_price", 0.0))
     volume = st.number_input("Volume", value=st.session_state.get("volume", 0))
 
-    submitted = st.form_submit_button("Predict Future Returns")
+    submitted = st.form_submit_button("Add Data")
 
     if submitted:
       st.session_state['open_price'] = open_price

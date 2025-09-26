@@ -131,7 +131,7 @@ with col1:
     st.write(f"**Industry:** {meta['industry']}")
     st.write(f"**Website:** {meta['website']}")
     st.write(f"**Phone:** {meta['phone']}")
-    st.write(f"**Current Price:** {meta['currentPrice']:.2f}{{meta['currency']}}")
+    st.write(f"**Current Price:** {meta['currentPrice']:.2f} {meta['currentPrice']}")
     st.write(f"**Market Cap:** {meta['marketCap']:,} {meta['currency']}")
     st.write(f"**52 Week High:** {meta['fiftyTwoWeekHigh']:.2f} {meta['currency']}")
     st.write(f"**52 Week Low:** {meta['fiftyTwoWeekLow']:.2f} {meta['currency']}")

@@ -246,10 +246,6 @@ if 'model_rf' not in st.session_state:
 if 'model_knn' not in st.session_state:
     st.session_state['model_knn'] = mae
 
-st.success(f"RMSE -- XGB: {st.session_state['model_xgb']:.6f}")
-st.success(f"MSE -- RF: {st.session_state['model_rf']:.6f}")
-st.success(f"MAE -- KNN: {st.session_state['model_knn']:.6f}")
-
 ###################################### Visualization ########################################
 # st.markdown("<h3 style='color: #00F0A8;'>Model Predictions vs Actual Returns</h3>", unsafe_allow_html=True)
 # plt.figure(figsize=(14,7))
@@ -265,6 +261,21 @@ st.success(f"MAE -- KNN: {st.session_state['model_knn']:.6f}")
 # st.pyplot(plt)
 # plt.clf()
 
+st.subheader("Model Evaluation Metrics")
+coli1, coli2, coli3 = st.columns(3)      
+
+with coli1:
+    st.subheader("XGBoost")
+    st.success(f"RMSE -- XGB: {st.session_state['model_xgb']:.6f}")
+
+with coli2:
+    st.subheader("Random Forest")
+    st.success(f"MSE -- RF: {st.session_state['model_rf']:.6f}")
+
+with coli3:
+    st.subheader("KNN")
+    st.success(f"MAE -- KNN: {st.session_state['model_knn']:.6f}")  
+
 ####################################### Streamlit version #######################################
 pred_df = pd.DataFrame({
     'Actual Returns': y_test.values,
@@ -275,6 +286,8 @@ pred_df = pd.DataFrame({
 
 st.markdown("<h3 style='color: #00F0A8;'>Model Predictions vs Actual Returns</h3>", unsafe_allow_html=True)
 st.line_chart(pred_df)
+
+st.info(f"Now the models have trained on {stock_symbol} stock data, you can predict future returns by entering future stock data in the sidebar and clicking the 'Predict Future Returns' button.")
 
 ####################################### Initialize session_state #################################
 if 'open_price' not in st.session_state:
@@ -336,12 +349,14 @@ with st.sidebar.form("future_form"):
     if not but:
         st.stop()
 
-    st.info("After predicting one time the form will return to past values")    
+    st.info("After predicting one time the form will return to past values")
 
 
 pred_xgb = model_xgb.predict(future_scaled)[0]
 pred_rf = model_rf.predict(future_scaled)[0]
 pred_knn = model_knn.predict(future_scaled)[0]
+
+
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -349,7 +364,13 @@ with col1:
 with col2:
     st.info(f"Random Forest: {pred_rf:.6f}")
 with col3:
-    st.info(f"KNN: {pred_knn:.6f}")    
+    st.info(f"KNN: {pred_knn:.6f}")
+
+   
+
+
+
+    
     
     
     

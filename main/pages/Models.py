@@ -356,9 +356,10 @@ pred_xgb = model_xgb.predict(future_scaled)[0]
 pred_rf = model_rf.predict(future_scaled)[0]
 pred_knn = model_knn.predict(future_scaled)[0]
 
+st.markdown("<h3 style='color: #00F0A8;'>Predicted Future Returns</h3>", unsafe_allow_html=True)
+
 
 col1, col2, col3 = st.columns(3)
-
 with col1:
     st.info(f"XGBoost: {pred_xgb:.6f}")
 with col2:

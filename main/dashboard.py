@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import time
 import darkdetect
 from datetime import datetime, timedelta
+
+
 try :
     st.set_page_config(
         page_title="Stock Price Viewer",

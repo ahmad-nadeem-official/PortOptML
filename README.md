@@ -96,7 +96,7 @@ Demo
 
 [View link](https://via.placeholder.com/800x400?text=Live+Dashboard+Screenshot)
 
-_(Add actual screenshots of key pages for better impact)_
+_(Video getting ready)_
 
 What I Learned & Challenges Overcome
 ------------------------------------

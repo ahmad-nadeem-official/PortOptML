@@ -91,9 +91,8 @@ Usage
     *   In **Dashboard**: Monitor live prices with auto-refresh every 30 seconds.
 4.  **Customization**: Edit date ranges, intervals, or add features via modular code structure.
 
-Example Screenshot:
-
-Failed to load image
+Demo:
+-------------------
 
 [View link](https://via.placeholder.com/800x400?text=Live+Dashboard+Screenshot)
 
@@ -124,16 +123,7 @@ Please follow PEP8 style and include tests where possible.
 
 License
 -------
+This project is licensed under the Apache-2.0 license. See LICENSE for details.
 
-This project is licensed under the MIT License. See LICENSE for details.
-
-Contact
--------
-
-*   **Developer**: Your Name (e.g., John Doe)
-*   **Email**: [your.email@example.com](mailto:your.email@example.com)
-*   **LinkedIn**: linkedin.com/in/yourprofile
-*   **GitHub**: github.com/yourusername
-*   **Portfolio**: yourportfolio.com
 
 I'm open to collaborations or discussions on fintech/data projects. Let's connect if you're hiring for roles involving Python, ML, or data apps! 🚀

@@ -52,31 +52,24 @@ Installation
 ------------
 
 1.  **Clone the Repository**:
-    
-    text
-    
+        
         git clone https://github.com/yourusername/tradmincer.git
         cd tradmincer
     
 2.  **Set Up Virtual Environment** (Recommended):
-    
-    text
-    
+        
         python -m venv venv
         source venv/bin/activate  # On Windows: venv\Scripts\activate
     
 3.  **Install Dependencies**:
-    
-    text
-    
+     
         pip install -r requirements.txt
     
     _(requirements.txt includes: streamlit, yfinance, pandas, requests, matplotlib, scikit-learn, xgboost, scipy, plotly, feedparser, darkdetect)_
 4.  **Run the App**:
     
-    text
     
-        streamlit run dashboard.py  # Or any entry point like insight.py
+        streamlit run dashboard.py
     
     Access at http://localhost:8501.
 

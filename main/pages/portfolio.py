@@ -121,8 +121,8 @@ if 'tick' not in st.session_state:
     st.session_state['tick'] = tickers[0]
 
 ################################################# Portfolio Section #######################################
-st.header("Portfolio Input")
-st.write("Enter your stock portfolio details below. You can add multiple stocks along with their quantities.")
+st.header("Portfolio Analysis and Optimization")
+st.write("See your stock portfolio details below. You can add multiple stocks along with their quantities.")
 
 st.sidebar.header("Add Stock to Portfolio")
 

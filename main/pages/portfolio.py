@@ -131,7 +131,6 @@ st.write("See your stock portfolio details below. You can add multiple stocks al
 
 st.sidebar.header("Add Stock to Portfolio")
 
-
 if "list" not in st.session_state:
     st.session_state["list"] = []
 
@@ -284,6 +283,66 @@ with coll2:
    ax.axis('equal')  # Equal aspect ratio ensures the pie is a circle
    st.pyplot(fig)
 
+
+#############################################moint carlo simulation###########################
+# Monte Carlo Simulation
+# st.subheader("Monte Carlo Simulation")
+# simulations = np.zeros((252, 100))
+# for sim in range(100):
+#     daily_returns = np.random.multivariate_normal(mean_returns, cov_matrix, 252)
+#     simulations[:, sim] = (1 + daily_returns.dot(opt_weights)).cumprod()
+
+# fig, ax = plt.subplots(figsize=(5, 3))
+# ax.plot(simulations, color="blue", alpha=0.2)
+# ax.set_title("Simulated Portfolio Value Paths")
+# st.pyplot(fig)
+
+st.subheader("Monte Carlo Simulation of Portfolio Returns")
+
+num_simulations = 100
+num_days = 252  # 1 year
+
+simulations = np.zeros((num_days, num_simulations))
+
+for sim in range(num_simulations):
+    daily_returns = np.random.multivariate_normal(mean_returns, cov_matrix, num_days)
+    portfolio_returns = daily_returns.dot(opt_weights)
+    simulations[:, sim] = (1 + portfolio_returns).cumprod()
+
+# put inside a narrow column to keep it small
+col1, col2, col3 = st.columns([1,2,1])  
+
+with col2:  
+    fig, ax = plt.subplots(figsize=(4, 3))  # controlled size  
+    ax.plot(simulations, color="blue", alpha=0.2)
+    ax.set_title("Monte Carlo Simulated Portfolio Value Paths", fontsize=10)
+    ax.set_xlabel("Days", fontsize=8)
+    ax.set_ylabel("Cumulative Return", fontsize=8)
+    st.pyplot(fig, use_container_width=False)
+
+
+##################################################### Risk Metrics #################################
+
+st.subheader("Value at Risk (VaR)")
+
+portfolio_returns = returns.dot(opt_weights)
+VaR_95 = np.percentile(portfolio_returns, 5)
+
+st.warning(f"95% VaR: {VaR_95:.2%} (max expected daily loss with 95% confidence)")
+
+
+############################################# Stress Test ##########################################
+
+st.subheader("Stress Test: Maximum Drawdown")
+
+cumulative = (1 + portfolio_returns).cumprod()
+roll_max = cumulative.cummax()
+drawdown = (cumulative - roll_max) / roll_max
+max_drawdown = drawdown.min()
+
+st.error(f"Maximum Drawdown: {max_drawdown:.2%}")
+
+###########################################Final Portfolio Metrics ##########################################
 
 ret, vol, sharpe = portfolio_performance(opt_weights)
 

@@ -54,7 +54,7 @@ Installation
 1.  **Clone the Repository**:
         
         git clone https://github.com/ahmad-nadeem-official/PortOptML.git
-        cd tradmincer
+        cd main
     
 2.  **Set Up Virtual Environment** (Recommended):
         

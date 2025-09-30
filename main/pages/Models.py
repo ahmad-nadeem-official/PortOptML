@@ -147,7 +147,8 @@ data['MA50'] = data['Close'].rolling(50).mean()
 data['Volatility'] = data['Return'].rolling(20).std()
 data = data.dropna()
 st.success("Features added successfully!")
-st.write(data.head(5))
+st.info("for your exposure, we are showing you only top 10 rows of the dataset")
+st.write(data.head(10))
 
 ######################################## Train test Splitting ####################################
 features = ['Open','High','Low','Close','Volume','MA10','MA50','Volatility']

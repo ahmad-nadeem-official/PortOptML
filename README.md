@@ -91,7 +91,7 @@ Usage
     *   In **Dashboard**: Monitor live prices with auto-refresh every 30 seconds.
 4.  **Customization**: Edit date ranges, intervals, or add features via modular code structure.
 
-Demo:
+Demo
 -------------------
 
 [View link](https://via.placeholder.com/800x400?text=Live+Dashboard+Screenshot)

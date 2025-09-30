@@ -42,7 +42,8 @@ Tech Stack
  (Yahoo Finance API), requests, feedparser (RSS parsing)
 *   **Data Processing**: ![Pandas](https://img.shields.io/badge/Pandas-2.1.4-150458?logo=pandas&logoColor=white), ![NumPy](https://img.shields.io/badge/NumPy-1.26.4-013243?logo=numpy&logoColor=white) 
 *   **Machine Learning**: ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.4-F7931E?logo=scikit-learn&logoColor=white) (train-test split, scaling, KNN, Random Forest), XGBoost
-*   **Optimization**: SciPy (minimize for portfolio weights)
+*   **Optimization**: ![SciPy](https://img.shields.io/badge/SciPy-1.11-8CAAE6?logo=scipy&logoColor=white)
+ (minimize for portfolio weights)
 *   **Visualization**: ![Matplotlib](https://img.shields.io/badge/Matplotlib-3.8.4-11557C?logo=matplotlib&logoColor=white)
 *   **Other**: Darkdetect for theme detection, datetime for time-series handling
 *   **Environment**: ![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white) No external databases required (stateful via Streamlit sessions)

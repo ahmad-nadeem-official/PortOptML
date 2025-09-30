@@ -300,7 +300,7 @@ with coll2:
 col1, col2, col3 = st.columns([1,2,1]) 
 
 with col2:
-    st.markdown("### Monte Carlo Simulation of Portfolio Returns")
+    st.markdown("#### Monte Carlo Simulation of Portfolio Returns")
 
 num_simulations = 100
 num_days = 252  # 1 year

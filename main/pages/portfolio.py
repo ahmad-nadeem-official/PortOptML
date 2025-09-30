@@ -300,7 +300,11 @@ with coll2:
 col1, col2, col3 = st.columns([1,2,1]) 
 
 with col2:
-    st.markdown("#### Monte Carlo Simulation of Portfolio Returns")
+    st.markdown(
+        "<h5 style='text-align:center; color:#0073e6; font-size:16px;'>Monte Carlo Simulation of Portfolio Returns</h5>",
+        unsafe_allow_html=True
+    )
+
 
 num_simulations = 100
 num_days = 252  # 1 year

@@ -3,7 +3,7 @@ TRADMINCER: Advanced Stock Market Dashboard
 
 
 
-[Tech](https://github.com/user-attachments/assets/a4408faa-300e-46f2-b574-6428b45e4c3a)
+![Finance Animation](https://private-user-images.githubusercontent.com/157820453/451283502-0be7cb2d-e595-4c86-9abb-aed84399fa27.gif)
 
 Overview
 --------

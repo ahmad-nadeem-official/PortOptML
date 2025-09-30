@@ -297,7 +297,10 @@ with coll2:
 # ax.set_title("Simulated Portfolio Value Paths")
 # st.pyplot(fig)
 
-st.subheader("Monte Carlo Simulation of Portfolio Returns")
+col1, col2, col3 = st.columns([1,2,1]) 
+
+with col1:
+    st.subheader("Monte Carlo Simulation of Portfolio Returns")
 
 num_simulations = 100
 num_days = 252  # 1 year

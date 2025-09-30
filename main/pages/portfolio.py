@@ -11,7 +11,12 @@ import plotly.express as px
 import matplotlib.cm as cm
 
 
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_icon=":chart_with_upwards_trend:",
+    layout="wide"
+    )
+
+
 st.sidebar.title("TRADMINCER v1.02")
 
 ######################################## Sidebar #######################################
@@ -252,6 +257,8 @@ opt_results = minimize(neg_sharpe, init_guess, bounds=bounds, constraints=constr
 opt_weights = opt_results.x
 
 coll1, coll2 = st.columns(2)
+
+
 
 
 with coll1:

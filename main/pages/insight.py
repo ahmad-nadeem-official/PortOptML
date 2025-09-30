@@ -5,7 +5,11 @@ import requests
 import matplotlib.pyplot as plt
 
 
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_icon=":chart_with_upwards_trend:",
+    layout="wide"
+)
+
 st.sidebar.title("TRADMINCER v1.02")
 
 results = yf.screen('most_actives')

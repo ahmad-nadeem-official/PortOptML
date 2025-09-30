@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(
     page_title="Stock Price Prediction Models",
-    page_icon=":crystal_ball:",
+    page_icon=":chart_with_upwards_trend:",
     layout="wide",
 )
 

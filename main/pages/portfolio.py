@@ -299,7 +299,7 @@ with coll2:
 
 col1, col2, col3 = st.columns([1,2,1]) 
 
-with col1:
+with col2:
     st.subheader("Monte Carlo Simulation of Portfolio Returns")
 
 num_simulations = 100

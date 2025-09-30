@@ -1,11 +1,9 @@
 TRADMINCER: Advanced Stock Market Dashboard
 ===========================================
 
-Failed to load image
 
-[View link](https://via.placeholder.com/1200x300?text=TRADMINCER+v1.02)
 
-_(Replace with actual banner image for visual appeal)_
+[Tech](https://github.com/user-attachments/assets/a4408faa-300e-46f2-b574-6428b45e4c3a)
 
 Overview
 --------

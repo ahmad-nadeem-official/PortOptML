@@ -301,7 +301,7 @@ col1, col2, col3 = st.columns([1,2,1])
 
 with col2:
     st.markdown(
-        "<h4 style='text-align:center; color:#bcbd22; font-size:16px;'>Monte Carlo Simulation of Portfolio Returns</h4>",
+        "<h3 style='text-align:center; color:#bcbd22; font-size:20px;'>Monte Carlo Simulation of Portfolio Returns</h3>",
         unsafe_allow_html=True
     )
 

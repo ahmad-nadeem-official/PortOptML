@@ -37,14 +37,15 @@ Features
 Tech Stack
 ----------
 
-*   **Frontend/Backend**: Streamlit (for rapid prototyping and deployment)
-*   **Data Fetching**: yfinance (Yahoo Finance API), requests, feedparser (RSS parsing)
-*   **Data Processing**: Pandas, NumPy
-*   **Machine Learning**: Scikit-learn (train-test split, scaling, KNN, Random Forest), XGBoost
+*   **Frontend/Backend**:![Streamlit](https://img.shields.io/badge/Streamlit-1.0-FF4B4B?logo=streamlit&logoColor=white) Streamlit (for rapid prototyping and deployment)
+*   **Data Fetching**: ![yfinance](https://img.shields.io/badge/yfinance-6001d2?logo=yahoo&logoColor=white)
+ (Yahoo Finance API), requests, feedparser (RSS parsing)
+*   **Data Processing**: ![Pandas](https://img.shields.io/badge/Pandas-2.1.4-150458?logo=pandas&logoColor=white), ![NumPy](https://img.shields.io/badge/NumPy-1.26.4-013243?logo=numpy&logoColor=white) 
+*   **Machine Learning**: ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.4-F7931E?logo=scikit-learn&logoColor=white) (train-test split, scaling, KNN, Random Forest), XGBoost
 *   **Optimization**: SciPy (minimize for portfolio weights)
-*   **Visualization**: Matplotlib, Plotly Express, Streamlit's built-in charts
+*   **Visualization**: ![Matplotlib](https://img.shields.io/badge/Matplotlib-3.8.4-11557C?logo=matplotlib&logoColor=white)
 *   **Other**: Darkdetect for theme detection, datetime for time-series handling
-*   **Environment**: Python 3.12+; No external databases required (stateful via Streamlit sessions)
+*   **Environment**: ![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white) No external databases required (stateful via Streamlit sessions)
 
 This stack emphasizes efficiency, scalability, and integration of data science workflows into production-ready apps.
 

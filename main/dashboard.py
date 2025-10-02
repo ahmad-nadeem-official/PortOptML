@@ -7,11 +7,18 @@ import time
 import darkdetect
 from datetime import datetime, timedelta
 
+favicon_path = "/home/muhammad-ahmad-nadeem/Projects/PortOptML/main/Tradmincer.png"
+st.markdown(
+    f"""
+    <link rel="icon" href="{favicon_path}" type="image/png">
+    """,
+    unsafe_allow_html=True
+)
+
 
 try :
     st.set_page_config(
         page_title="Stock Price Viewer",
-        page_icon=":chart_with_upwards_trend:",
         layout="wide",
     )
     

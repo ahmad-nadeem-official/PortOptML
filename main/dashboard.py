@@ -18,6 +18,7 @@ st.markdown(
 
 try :
     st.set_page_config(
+        page_icon=favicon_path,
         page_title="Stock Price Viewer",
         layout="wide",
     )

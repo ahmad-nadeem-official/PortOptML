@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 
 
-favicon_path = "/home/muhammad-ahmad-nadeem/Projects/PortOptML/main/Tradmincer.png"
+favicon_path = "main/Tradmincer_big.png"
 st.set_page_config(
     page_icon=favicon_path,
     page_title="Tradmincer",

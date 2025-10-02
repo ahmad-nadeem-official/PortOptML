@@ -12,7 +12,7 @@ import xgboost as xgb
 from sklearn.metrics import mean_squared_error, root_mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
 
-favicon_path = "/home/muhammad-ahmad-nadeem/Projects/PortOptML/main/Tradmincer.png"
+favicon_path = "main/Tradmincer_big.png"
 st.set_page_config(
     page_icon=favicon_path,
     page_title="Tradmincer",

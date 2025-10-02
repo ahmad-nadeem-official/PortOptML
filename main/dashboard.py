@@ -7,9 +7,10 @@ import time
 import darkdetect
 from datetime import datetime, timedelta
 
-favicon_path = "/home/muhammad-ahmad-nadeem/Projects/PortOptML/main/Tradmincer.png"
 
 try :
+    favicon_path = "/home/muhammad-ahmad-nadeem/Projects/PortOptML/main/Tradmincer.png"
+
     st.set_page_config(
         page_icon=favicon_path,
         page_title="Stock Price Viewer",

@@ -7,10 +7,13 @@ import matplotlib.pyplot as plt
 import time
 
 
+favicon_path = "/home/muhammad-ahmad-nadeem/Projects/PortOptML/main/Tradmincer.png"
 st.set_page_config(
-    page_icon=":chart_with_upwards_trend:",
-    layout="wide"
+    page_icon=favicon_path,
+    page_title="Stock Price Viewer",
+    layout="wide",
 )
+
 
 
 st.sidebar.title("TRADMINCER v1.02")

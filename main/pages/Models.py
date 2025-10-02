@@ -12,11 +12,13 @@ import xgboost as xgb
 from sklearn.metrics import mean_squared_error, root_mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
 
+favicon_path = "/home/muhammad-ahmad-nadeem/Projects/PortOptML/main/Tradmincer.png"
 st.set_page_config(
-    page_title="Stock Price Prediction Models",
-    page_icon=":chart_with_upwards_trend:",
+    page_icon=favicon_path,
+    page_title="Stock Price Viewer",
     layout="wide",
 )
+
 
 st.sidebar.title("TRADMINCER v1.02")
 

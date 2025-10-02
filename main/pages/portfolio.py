@@ -14,7 +14,7 @@ import matplotlib.cm as cm
 favicon_path = "/home/muhammad-ahmad-nadeem/Projects/PortOptML/main/Tradmincer.png"
 st.set_page_config(
     page_icon=favicon_path,
-    page_title="Stock Price Viewer",
+    page_title="Tradmincer",
     layout="wide",
 )
 

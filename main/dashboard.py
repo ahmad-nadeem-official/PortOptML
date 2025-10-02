@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 
 try :
-    favicon_path = "main/Tradmincer.png"
+    favicon_path = "main/Tradmincer_big.png"
 
     st.set_page_config(
         page_icon=favicon_path,

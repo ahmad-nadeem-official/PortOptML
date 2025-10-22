@@ -1,4 +1,5 @@
 altair
+altair==4.2.2
 appdirs
 attrs
 beautifulsoup4

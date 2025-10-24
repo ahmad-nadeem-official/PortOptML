@@ -6,6 +6,13 @@ import matplotlib.pyplot as plt
 import time
 import darkdetect
 from datetime import datetime, timedelta
+import sys, types
+
+if 'imghdr' not in sys.modules:
+    sys.modules['imghdr'] = types.ModuleType('imghdr')
+
+
+
 
 
 try :

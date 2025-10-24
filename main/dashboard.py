@@ -8,6 +8,11 @@ import darkdetect
 from datetime import datetime, timedelta
 import sys, types
 
+
+
+# ⚙️ Option B (Monkey patch workaround)
+# If you must stay on 3.13, fake the module at runtime by adding this at the top of your main/dashboard.py:
+
 if 'imghdr' not in sys.modules:
     sys.modules['imghdr'] = types.ModuleType('imghdr')
 

@@ -1,4 +1,5 @@
 TRADMINCER: Advanced Stock Market Dashboard
+URL: ![Click here](https://trademincer.streamlit.app/)
 ===========================================
 
 

@@ -1,10 +1,12 @@
 TRADMINCER: Advanced Stock Market Dashboard
-URL: ![Click here](https://trademincer.streamlit.app/)
 ===========================================
 
+### main
+--------
+[Go to Section](https://trademincer.streamlit.app/ticker)
 
 
-![Finance Animation](https://private-user-images.githubusercontent.com/157820453/451283502-0be7cb2d-e595-4c86-9abb-aed84399fa27.gif)
+![Finance Animation](https://github.com/user-attachments/assets/bb01e73e-76f0-47e5-a94a-d5e9b11e6cc3)
 
 Overview
 --------

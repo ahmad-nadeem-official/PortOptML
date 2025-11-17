@@ -35,7 +35,6 @@ MarkupSafe
 matplotlib
 multitasking
 narwhals
-newscatcherapi
 numpy
 nvidia-nccl-cu12
 opencv-python

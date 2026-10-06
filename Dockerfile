@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main/ ./main/
 
 # Command to run your app
-CMD ["python", "main/Dashbord.py"]
+CMD ["python", "main/dashboard.py"]

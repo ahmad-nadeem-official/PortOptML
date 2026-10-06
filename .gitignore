@@ -1,2 +1,9 @@
 # PortOptML
 code
+
+# Python bytecode / build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/

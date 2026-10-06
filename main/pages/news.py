@@ -5,6 +5,7 @@ import pandas as pd
 import requests
 import matplotlib.pyplot as plt
 import time
+from util import get_most_active
 
 
 favicon_path = "main/Tradmincer_big.png"
@@ -18,7 +19,7 @@ st.set_page_config(
 
 st.sidebar.title("TRADMINCER v1.02")
 
-results = yf.screen('most_actives')
+results = get_most_active()
 top10 = results['quotes'][1:150]
 
 currency = {
@@ -108,7 +109,6 @@ time.sleep(3)  # wait 3 seconds
 warning_h.warning("Refresh might shuffle the news order, please be patient...")
 
 
-st.set_page_config(layout="wide")
 st.title("Latest News about your favorite stocks")
 
 

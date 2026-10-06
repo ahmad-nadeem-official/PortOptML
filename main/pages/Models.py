@@ -9,8 +9,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 import xgboost as xgb
-from sklearn.metrics import mean_squared_error, root_mean_squared_error, mean_absolute_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
+from util import get_most_active
 
 favicon_path = "main/Tradmincer_big.png"
 st.set_page_config(
@@ -49,7 +50,7 @@ st.sidebar.markdown(
 
 
 
-results = yf.screen('most_actives')
+results = get_most_active()
 top10 = results['quotes'][1:150]
 
 currency = {
@@ -138,7 +139,7 @@ meta = tick.info
 day = date.today()
 
 data = yf.download(st.session_state['tick'], start="2015-01-01", end=day, progress=False)
-st.markdown(f"<h4 style='color: #db4237;'>Record of Last 10 years of {meta['longName']}</h4>", unsafe_allow_html=True)
+st.markdown(f"<h4 style='color: #db4237;'>Record of Last 10 years of {meta.get('longName', stock_symbol)}</h4>", unsafe_allow_html=True)
 st.dataframe(data)
 
 
@@ -238,7 +239,7 @@ if y_pred_knn not in st.session_state:
 
 
 
-rmse = root_mean_squared_error(y_test, y_pred_xgb)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred_xgb))
 mse = mean_squared_error(y_test, y_pred_rf)
 mae = mean_absolute_error(y_test, y_pred_knn)
 #################################### session state for model eval #############################

@@ -7,6 +7,7 @@ import time
 import darkdetect
 from datetime import datetime, timedelta
 import sys, types
+from util import get_most_active
 
 
 
@@ -44,7 +45,7 @@ try :
     
     
     
-    results = yf.screen('most_actives')
+    results = get_most_active()
     top10 = results['quotes'][1:150]
     
     currency = {

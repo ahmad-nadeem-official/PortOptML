@@ -80,6 +80,6 @@ watchdog==6.0.0
 webencodings==0.5.1
 websockets==15.0.1
 xgboost==3.0.5
-yahoo-fin==0.8.9.1
-yfinance==0.2.65
+yahoo-fin
+yfinance
 zipp==3.23.0
